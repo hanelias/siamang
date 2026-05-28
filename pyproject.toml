@@ -59,6 +59,11 @@ include = ["siamang*"]
 "siamang.frontend.templates.react.vendor" = ["*.js"]
 
 [project.optional-dependencies]
+dev = [
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "pytest>=8.0",
+]
 # Backward-compat aliases — every dep is now installed by default with
 # `pip install siamang`. These groups remain for users with old install
 # scripts; they resolve to empty extras.
@@ -80,3 +85,33 @@ supabase = "siamang.deploy.backends.supabase:SupabaseBackend"
 [project.entry-points."siamang.frontends"]
 local = "siamang.deploy.frontends.local:LocalFrontend"
 vercel = "siamang.deploy.frontends.vercel:VercelFrontend"
+
+# ---------------------------------------------------------------------------
+# Tool configuration
+# ---------------------------------------------------------------------------
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "B008",   # function call in default argument (common in dataclasses)
+    "SIM108", # ternary instead of if-else (readability)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["siamang"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false  # gradual typing — will tighten later
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
