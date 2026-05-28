@@ -129,17 +129,30 @@ jobs:
           python -c "
           import siamang as sg
 
-          for name in ('classic', 'modern', 'humanist'):
+          # Test all theme presets with their expected font_preset values
+          expected = {
+              'default': 'academic',
+              'academic': 'academic',
+              'dark': 'academic',
+              'modern': 'modern',
+              'humanist': 'humanist',
+              'high_contrast': 'modern',
+          }
+          for name, expected_font in expected.items():
               preset = sg.get_preset(name)
-              assert preset.font_preset == name
-              print(f'Preset {name}: OK')
+              assert preset.font_preset == expected_font, (
+                  f'{name}: expected font_preset={expected_font!r}, got {preset.font_preset!r}'
+              )
+              print(f'Preset {name}: font_preset={preset.font_preset} OK')
 
+          # Test custom config
           ui = sg.UIConfig(
               font_preset='modern',
               primary_color='#e63946',
               accent_color='#457b9d',
           )
           assert ui.primary_color == '#e63946'
+          assert ui.font_preset == 'modern'
           print('UIConfig OK')
           "
 
