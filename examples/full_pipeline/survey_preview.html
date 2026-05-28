@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>Remote Work &amp; Algorithmic Management in IT</title>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/survey-core@2.5.23/survey-core.min.css">
   <style>
 /* ── siamang theme — research-grade ─────────────────────────────────── */
@@ -440,21 +440,20 @@ button:focus-visible {
   <script src="https://unpkg.com/survey-core@2.5.23/survey.core.min.js"></script>
   <script src="https://unpkg.com/survey-js-ui@2.5.23/survey-js-ui.min.js"></script>
   <script>
-
 window.SIAMANG_ENV = {"transport": "demo", "survey_id": "demo_preview"};
 window.SIAMANG_TRANSPORTS = window.SIAMANG_TRANSPORTS || {};
 window.SIAMANG_TRANSPORTS.demo = {
   async submit(responses) {
-    alert("Survey completed! Responses: " + JSON.stringify(responses, null, 2));
+    console.log("Survey completed!", responses);
     return { ok: true };
   },
-  async checkQuota() { return { ok: true }; }
+  async checkQuota() { return { ok: true, allowed: true }; }
 };
 
 </script>
   <script>
     (function() {
-      const schema = {"title": "Remote Work & Algorithmic Management in IT", "locale": "en", "pages": [{"name": "consent", "title": "Informed Consent", "elements": [{"id": "consent", "name": "consent", "title": "Do you consent to participate in this research study on remote work and digital monitoring?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Yes, I agree to participate"}, {"value": 0, "text": "No, I do not wish to participate"}]}]}, {"name": "demographics", "title": "Demographics", "elements": [{"id": "age", "name": "age", "title": "What is your age?", "isRequired": true, "type": "text", "inputType": "number"}, {"id": "gender", "name": "gender", "title": "How do you identify?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Male"}, {"value": 2, "text": "Female"}, {"value": 3, "text": "Non-binary"}, {"value": 4, "text": "Prefer not to say"}]}], "visibleIf": "{consent} = 1"}, {"name": "professional", "title": "Professional Background", "elements": [{"id": "it_role", "name": "it_role", "title": "What is your primary IT role?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Software Engineer"}, {"value": 2, "text": "Data Scientist / ML Engineer"}, {"value": 3, "text": "DevOps / SRE"}, {"value": 4, "text": "Product Manager"}, {"value": 5, "text": "Other"}]}, {"id": "experience", "name": "experience", "title": "How many years of professional IT experience do you have?", "isRequired": true, "type": "text", "inputType": "number"}, {"id": "remote_freq", "name": "remote_freq", "title": "How often do you work remotely?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Never (fully on-site)"}, {"value": 2, "text": "Occasionally (1-2 days/month)"}, {"value": 3, "text": "Hybrid (2-3 days/week)"}, {"value": 4, "text": "Mostly remote (4+ days/week)"}, {"value": 5, "text": "Fully remote"}]}], "visibleIf": "{consent} = 1"}, {"name": "surveillance", "title": "Workplace Monitoring", "elements": [{"id": "matrix_surv_keystroke", "name": "matrix_surv_keystroke", "title": "To what extent do you agree that the following monitoring tools are used at your workplace?", "isRequired": false, "type": "matrix", "columns": [{"value": 1, "text": "Strongly disagree"}, {"value": 2, "text": "Disagree"}, {"value": 3, "text": "Neutral"}, {"value": 4, "text": "Agree"}, {"value": 5, "text": "Strongly agree"}], "rows": [{"value": "surv_keystroke", "text": "Keystroke logging / activity tracking"}, {"value": "surv_camera", "text": "Webcam monitoring / periodic screenshots"}, {"value": "surv_git", "text": "Git commit frequency metrics"}]}], "visibleIf": "({consent} = 1) and ({remote_freq} >= 2)"}, {"name": "outcomes", "title": "Work Outcomes", "elements": [{"id": "satisfaction", "name": "satisfaction", "title": "How satisfied are you with your current job overall?", "isRequired": false, "type": "rating", "rateMax": 5, "rateMin": 1}, {"id": "autonomy", "name": "autonomy", "title": "How much autonomy do you have in deciding how to do your work?", "isRequired": false, "type": "rating", "rateMax": 5, "rateMin": 1}], "visibleIf": "{consent} = 1"}, {"name": "qualitative", "title": "Your Experience", "elements": [{"id": "story", "name": "story", "title": "Please share any experience you have had with algorithmic management or automated monitoring at work.", "isRequired": false, "type": "comment"}], "visibleIf": "{consent} = 1"}], "showProgressBar": "top", "showPrevButton": true, "completedHtml": "<h3>Thank you for your participation!</h3>"};
+      const schema = {"title": "Remote Work & Algorithmic Management in IT", "locale": "en", "pages": [{"name": "consent", "title": "Informed Consent", "elements": [{"id": "consent", "name": "consent", "title": "Do you consent to participate in this research study on remote work and digital monitoring?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Yes, I agree to participate"}, {"value": 0, "text": "No, I do not wish to participate"}]}]}, {"name": "demographics", "title": "Demographics", "elements": [{"id": "age", "name": "age", "title": "What is your age?", "isRequired": true, "type": "text", "inputType": "number"}, {"id": "gender", "name": "gender", "title": "How do you identify?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Male"}, {"value": 2, "text": "Female"}, {"value": 3, "text": "Non-binary"}, {"value": 4, "text": "Prefer not to say"}]}], "visibleIf": "{consent} = 1"}, {"name": "professional", "title": "Professional Background", "elements": [{"id": "it_role", "name": "it_role", "title": "What is your primary IT role?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Software Engineer"}, {"value": 2, "text": "Data Scientist / ML Engineer"}, {"value": 3, "text": "DevOps / SRE"}, {"value": 4, "text": "Product Manager"}, {"value": 5, "text": "Other"}]}, {"id": "experience", "name": "experience", "title": "How many years of professional IT experience do you have?", "isRequired": true, "type": "text", "inputType": "number"}, {"id": "remote_freq", "name": "remote_freq", "title": "How often do you work remotely?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Never (fully on-site)"}, {"value": 2, "text": "Occasionally (1-2 days/month)"}, {"value": 3, "text": "Hybrid (2-3 days/week)"}, {"value": 4, "text": "Mostly remote (4+ days/week)"}, {"value": 5, "text": "Fully remote"}]}], "visibleIf": "{consent} = 1"}, {"name": "surveillance", "title": "Workplace Monitoring", "elements": [{"id": "matrix_surv_keystroke", "name": "matrix_surv_keystroke", "title": "To what extent do you agree that the following monitoring tools are used at your workplace?", "isRequired": false, "type": "matrix", "columns": [{"value": 1, "text": "Strongly disagree"}, {"value": 2, "text": "Disagree"}, {"value": 3, "text": "Neutral"}, {"value": 4, "text": "Agree"}, {"value": 5, "text": "Strongly agree"}], "rows": [{"value": "surv_keystroke", "text": "Keystroke logging / activity tracking"}, {"value": "surv_camera", "text": "Webcam monitoring / periodic screenshots"}, {"value": "surv_git", "text": "Git commit frequency metrics"}]}], "visibleIf": "({consent} = 1) and ({remote_freq} >= 2)"}, {"name": "outcomes", "title": "Work Outcomes", "elements": [{"id": "satisfaction", "name": "satisfaction", "title": "How satisfied are you with your current job overall?", "isRequired": false, "type": "rating", "rateMax": 5, "rateMin": 1}, {"id": "autonomy", "name": "autonomy", "title": "How much autonomy do you have in deciding how to do your work?", "isRequired": false, "type": "rating", "rateMax": 5, "rateMin": 1}], "visibleIf": "{consent} = 1"}, {"name": "qualitative", "title": "Your Experience", "elements": [{"id": "story", "name": "story", "title": "Please share any experience you have had with algorithmic management or automated monitoring at work.", "isRequired": false, "type": "text"}], "visibleIf": "{consent} = 1"}], "showProgressBar": "top", "showPrevButton": true, "completedHtml": "<h3>Thank you for your participation!</h3>"};
       const SurveyCore = window.Survey || window.SurveyCore;
       if (!SurveyCore || typeof SurveyCore.Model !== "function") {
         console.error("siamang: survey-core failed to load from CDN.");
@@ -462,8 +461,8 @@ window.SIAMANG_TRANSPORTS.demo = {
       }
       const survey = new SurveyCore.Model(schema);
 
-      const transportName = (window.SURVLIB_ENV && window.SURVLIB_ENV.transport) || "noop";
-      const transport = (window.SURVLIB_TRANSPORTS || {})[transportName];
+      const transportName = (window.SIAMANG_ENV && window.SIAMANG_ENV.transport) || "noop";
+      const transport = (window.SIAMANG_TRANSPORTS || {})[transportName];
 
       const container = document.getElementById("surveyContainer");
       const progressFill = document.getElementById("siamang-progress-fill");
@@ -480,8 +479,29 @@ window.SIAMANG_TRANSPORTS.demo = {
       survey.onCurrentPageChanged.add(updateProgress);
       survey.onStarted.add(updateProgress);
 
+      /**
+       * Flatten nested objects (e.g. SurveyJS matrix responses) into
+       * dot-separated top-level keys.
+       *
+       * Example: { matrix_q: { row1: 3, row2: 4 } }
+       *       -> { "matrix_q.row1": 3, "matrix_q.row2": 4 }
+       */
+      function flattenResponses(data) {
+        const result = {};
+        for (const [key, value] of Object.entries(data)) {
+          if (value !== null && typeof value === "object" && !Array.isArray(value)) {
+            for (const [subKey, subVal] of Object.entries(value)) {
+              result[key + "." + subKey] = subVal;
+            }
+          } else {
+            result[key] = value;
+          }
+        }
+        return result;
+      }
+
       survey.onComplete.add(async function(sender) {
-        const responses = sender.data;
+        const responses = flattenResponses(sender.data);
         if (transport && typeof transport.submit === "function") {
           try {
             await transport.submit(responses);
