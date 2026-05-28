@@ -78,11 +78,10 @@ from hello import survey
 data = survey.simulate(n=500, seed=42)
 print(data.frame.head())
 
-# Frequency table with labels
-freq = data.analysis.frequencies("fav_color", labels=True)
-print(freq)
+# High-level declarative reporting
+print(data.report.freq("fav_color").to_markdown())
 
-# Cronbach's alpha, crosstabs, descriptives etc. — see docs/reference/data.md
+# For low-level statistical methods (e.g. data.analysis.frequencies), see docs/reference/data.md
 ```
 
 ## Export to your stats package
@@ -101,10 +100,11 @@ conventions intact.
 
 ## Where to go next
 
-- **[`examples/demo_survey.py`](../examples/demo_survey.py)** — a complete
-  reference questionnaire that exercises every feature (all question
-  types, visibility logic, theming, conditional pages, "Other" option).
-  Run it locally with `siamang preview examples/demo_survey.py`.
+- **[`examples/full_pipeline/`](../examples/full_pipeline/)** — a complete,
+  fully worked sociological research pipeline. Includes a pre-executed
+  Jupyter notebook (`full_pipeline_demo.ipynb`) showcasing variables,
+  blocks, conditional pages, local deployment, data simulation,
+  and comprehensive declarative reporting.
 - **[Manual with examples](../MANUAL.md)** — single-file tour of every
   feature.
 - **[Concepts](concepts.md)** — the data model end-to-end.

@@ -22,7 +22,7 @@ my_survey.py
     ├── siamang deploy      →  Vercel + Supabase (production)
     ├── survey.simulate(n=) →  synthetic dataset for testing analysis
     ├── SurveyData.export() →  CSV / Excel / SPSS / Stata / R round-trip
-    └── SurveyData.analysis →  frequencies, crosstabs, banner tables, …
+    └── SurveyData.report   →  declarative tables, charts, banner tables, …
 ```
 
 ## The data model
@@ -96,8 +96,8 @@ Questionnaire
 | `DeployPipeline` | Orchestrator: validate, provision, build, publish. |
 | `DeployResult` | Hands back the deployed URL and lets you `.collect()` accumulated responses or `.responses()` filtered/paginated. |
 
-Bundled backends: `local` (SQLite), `supabase`. Bundled frontends:
-`local` (FastAPI + uvicorn), `vercel`. Custom backends are picked up
+Bundled backends: `local` (SQLite), `supabase`, `gsheets` (Google Sheets). Bundled frontends:
+`local` (FastAPI + uvicorn), `vercel`, `netlify`. Custom backends are picked up
 via the `siamang.backends` / `siamang.frontends` entry points.
 
 ### 4. `siamang.data` — analysis
@@ -107,8 +107,12 @@ accessors for analysis, processing, and tabulation.
 
 ```python
 data = survey.simulate(n=1000)
-data.analysis.frequencies("trust", labels=True, weighted=True)
-data.analysis.crosstab("gender", "party", normalize="columns", chi2=True)
+# High-level declarative reporting (recommended)
+data.report.freq("trust")
+data.report.crosstab("gender", "party")
+data.plot.boxplot("trust", by="gender")
+
+# Low-level data processing and tables
 data.tables.banner(rows=["trust"], columns=["gender", "region"])
 data.processing.recode("age", {18: "young", 65: "old"})
 ```
@@ -117,7 +121,9 @@ Accessors:
 
 | Accessor | Purpose |
 |----------|---------|
-| `data.analysis` (`DataAnalysis`) | Descriptive and inferential stats (frequencies, crosstabs, means, medians, CIs, Cronbach's α, ESS, Spearman, Mann-Whitney, Kruskal-Wallis). |
+| `data.report` (`ReportAccessor`) | Declarative, SPSS-like tables (`freq`, `crosstab`, `means`) with auto-labels and statistical tests. |
+| `data.plot` (`PlotAccessor`) | Declarative, SPSS-like charts (`bar`, `boxplot`, `heatmap`, `scatter`) with auto-labels and layout. |
+| `data.analysis` (`DataAnalysis`) | Low-level statistical methods (frequencies, crosstabs, proportion CIs, scale alpha, ESS, etc.). |
 | `data.processing` (`DataProcessing`) | Value-level transforms (recode, derive). |
 | `data.tables` (`SurveyTables`) | Banner / multi-cell tables for export. |
 
@@ -237,5 +243,5 @@ common cases.
 ```
 
 For a worked end-to-end example see the **[manual](../MANUAL.md)**, and
-for a fully-featured runnable survey see
-**[`examples/demo_survey.py`](../examples/demo_survey.py)**.
+for a fully-featured sociological pipeline with pre-executed notebook see
+**[`examples/full_pipeline/`](../examples/full_pipeline/)**.

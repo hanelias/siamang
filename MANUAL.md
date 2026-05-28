@@ -420,7 +420,36 @@ multi-choice, samples from `choices=` when present, falls back to
 
 ---
 
-## Analyse the data
+## Analyse and Report Data
+
+Siamang provides a dual-layer analysis API:
+1. **High-Level Declarative Reporting (`data.report.*` & `data.plot.*`)**: Recommended for most use cases. Returns rich, formatted table and chart objects that automatically handle value labels, weights, and standard statistical tests.
+2. **Low-Level Statistical Methods (`data.analysis.*`)**: For direct access to raw statistical metrics, custom confidence intervals, and scale reliability tests.
+
+### High-Level Declarative Reporting (Recommended)
+
+```python
+# Frequencies
+freq_table = data.report.freq("trust")
+print(freq_table.to_markdown())
+freq_table.to_dataframe()
+
+# Crosstabs (automatically runs Chi-square / Cramer's V tests)
+cross_table = data.report.crosstab("gender", "party")
+print(cross_table.to_markdown())
+
+# Group Means
+means_table = data.report.means("age", by="party")
+print(means_table.to_markdown())
+
+# Declarative Plotting
+data.plot.bar("trust").save("trust_bar.png")
+data.plot.boxplot("age", by="party").save("age_by_party.png")
+data.plot.heatmap(["trust_govt", "trust_courts", "trust_media"]).save("trust_heatmap.png")
+data.plot.scatter("age", "income").save("age_income_scatter.png")
+```
+
+### Low-Level Statistical Methods
 
 ```python
 ana = data.analysis
@@ -428,6 +457,7 @@ ana = data.analysis
 ana.mean("age")                                # 42.7
 ana.median("age")                              # 41.0
 
+# Returns raw pandas objects
 ana.frequencies("trust", labels=True, normalize=True)
 ana.crosstab("gender", "party", normalize="columns", chi2=True)
 

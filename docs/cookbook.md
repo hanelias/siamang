@@ -13,8 +13,10 @@ import siamang as sg
 ### Show a question only to adults
 
 ```python
-age = sg.Variable("age", scale="ratio")
-q_income = sg.NumericInput("Household income?", var=age,
+age    = sg.Variable("age", scale="ratio")
+income = sg.Variable("income", scale="ratio")
+
+q_income = sg.NumericInput("Household income?", var=income,
                            show_if=age.ge(18))
 ```
 
@@ -219,25 +221,32 @@ log_dwell = sg.Script(
 
 ```python
 data = survey.simulate(n=1000, seed=42).with_weight("weight")
+# High-level declarative reporting (recommended)
+print(data.report.freq("trust", weighted=True).to_markdown())
+
+# Low-level statistical methods
 data.analysis.frequencies("trust", labels=True, weighted=True, normalize=True)
 ```
 
 ### Weighted crosstab + Chi-square
 
 ```python
+# High-level declarative reporting (includes Chi-square / Cramers V by default)
+print(data.report.crosstab("gender", "party", weighted=True).to_markdown())
+
+# Low-level statistical methods
 tab, stats = data.analysis.crosstab(
     "gender", "party",
     normalize="columns",
     chi2=True, cramers_v=True,
     weighted=True, labels=True,
 )
-print(tab)
-print(stats)         # {"chi2": …, "pvalue": …, "dof": …, "cramers_v": …}
 ```
 
 ### Confidence interval for a proportion
 
 ```python
+# Low-level statistical methods
 data.analysis.proportion_ci("trust", value=5, confidence=0.95, weighted=True)
 # → {"proportion": 0.18, "ci_low": 0.16, "ci_high": 0.21, "n": 1000}
 ```
@@ -245,6 +254,7 @@ data.analysis.proportion_ci("trust", value=5, confidence=0.95, weighted=True)
 ### Effective sample size
 
 ```python
+# Low-level statistical methods
 data.with_weight("weight").analysis.effective_sample_size()
 # → ESS ≤ N — drops as weighting becomes more uneven
 ```

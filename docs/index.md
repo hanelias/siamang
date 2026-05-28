@@ -30,6 +30,9 @@ public class, dataclass field, and helper exported from the subpackage.
 - **[`siamang.data`](reference/data.md)** — `SurveyData`, the analysis
   layer (frequencies, crosstabs, descriptives, banner tables, weighted
   statistics), and `SurveyTables`.
+- **[`siamang.reporting`](reference/reporting.md)** — High-level declarative
+  reporting tables (`FreqTable`, `CrossTable`, `GroupMeanTable`) and charts
+  (`BarChart`, `BoxPlot`, `HeatMap`, `ScatterPlot`).
 - **[`siamang.io`](reference/io.md)** — CSV, Excel, SPSS (`.sav`),
   Stata (`.dta`), R script export, and the data dictionary
   reader/writer.
@@ -38,8 +41,8 @@ public class, dataclass field, and helper exported from the subpackage.
   Supabase), the `SurveySchema` IR, and the React payload compiler.
 - **[`siamang.deploy`](reference/deploy.md)** — `DeployPipeline`,
   `DeployResult`, the abstract `BackendAdapter` / `FrontendAdapter`,
-  the bundled local + Supabase backends, and the local + Vercel
-  frontends.
+  the bundled backends (Local, Supabase, Google Sheets), and frontends
+  (Local, Vercel, Netlify).
 - **[CLI](reference/cli.md)** — `siamang validate / preview / deploy /
   init`, every flag documented.
 
@@ -93,8 +96,9 @@ siamang deploy   my_survey.py --backend supabase --frontend vercel
 
 ```python
 data = survey.simulate(n=500, seed=42)
-freq = data.analysis().frequencies("trust")
-data.to_csv("trust.csv")
+# High-level declarative reporting API
+print(data.report.freq("trust").to_markdown())
+data.export("csv", "trust.csv")
 ```
 
 Continue with **[Getting started →](getting-started.md)**.
