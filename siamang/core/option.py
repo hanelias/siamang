@@ -35,8 +35,7 @@ class Option:
             value = getattr(self, field_name)
             if value is not None and not isinstance(value, (Expression, str)):
                 raise TypeError(
-                    f"Option.{field_name} must be Expression or str, "
-                    f"got {type(value).__name__}."
+                    f"Option.{field_name} must be Expression or str, got {type(value).__name__}."
                 )
         if self.media is not None and not isinstance(self.media, Media):
             raise TypeError("Option.media must be a Media instance.")

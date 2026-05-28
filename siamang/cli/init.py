@@ -40,9 +40,7 @@ def run(path: str | Path = "~/.siamang.toml", non_interactive: bool = False) -> 
         service = _ask("Supabase service_key", secret=True)
         cfg = Config(
             defaults=cfg.defaults,
-            backends={
-                "supabase": {"url": url, "anon_key": anon, "service_key": service}
-            },
+            backends={"supabase": {"url": url, "anon_key": anon, "service_key": service}},
             frontends=cfg.frontends,
             profiles=cfg.profiles,
         )

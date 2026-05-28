@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from siamang.frontend import constants
@@ -42,7 +42,7 @@ class FrontendBuilder:
         *,
         client: BackendClientTemplate,
         env: ClientEnv,
-        survey: "Questionnaire | None" = None,
+        survey: Questionnaire | None = None,
     ) -> SurveyBundle:
         """Render every artefact and return the assembled bundle.
 
@@ -77,9 +77,7 @@ class FrontendBuilder:
             "style.css": css,
             "env.js": env_js,
             "closed.html": closed_html,
-            "manifest.json": json.dumps(
-                manifest, ensure_ascii=False, indent=2, sort_keys=True
-            ),
+            "manifest.json": json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True),
         }
         for name, content in self.runtime.static_assets().items():
             files.setdefault(name, content)
@@ -108,5 +106,5 @@ def _build_manifest(
         "backend": env.backend,
         "surveyjs_version": getattr(runtime, "version", None),
         "schema_hash": schema_hash,
-        "built_at": datetime.now(timezone.utc).isoformat(),
+        "built_at": datetime.now(UTC).isoformat(),
     }

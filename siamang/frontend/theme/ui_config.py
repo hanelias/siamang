@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-
 _DENSITY_VALUES = {"compact", "comfortable", "spacious"}
 _FONT_PAIR_VALUES = {"serif", "sans", "mixed"}
 _LOGO_POSITIONS = {"left", "right", "center"}
@@ -148,21 +147,15 @@ class UIConfig:
 
     def __post_init__(self) -> None:
         if self.logo_position not in _LOGO_POSITIONS:
-            raise ValueError(
-                f"logo_position must be one of: {sorted(_LOGO_POSITIONS)}."
-            )
+            raise ValueError(f"logo_position must be one of: {sorted(_LOGO_POSITIONS)}.")
         if self.density not in _DENSITY_VALUES:
             raise ValueError(f"density must be one of: {sorted(_DENSITY_VALUES)}.")
         if self.font_pair not in _FONT_PAIR_VALUES:
             raise ValueError(f"font_pair must be one of: {sorted(_FONT_PAIR_VALUES)}.")
         if self.question_style not in _QUESTION_STYLES:
-            raise ValueError(
-                f"question_style must be one of: {sorted(_QUESTION_STYLES)}."
-            )
+            raise ValueError(f"question_style must be one of: {sorted(_QUESTION_STYLES)}.")
         if self.font_preset not in _FONT_PRESET_VALUES:
-            raise ValueError(
-                f"font_preset must be one of: {sorted(_FONT_PRESET_VALUES)}."
-            )
+            raise ValueError(f"font_preset must be one of: {sorted(_FONT_PRESET_VALUES)}.")
 
     @property
     def effective_accent(self) -> str:
@@ -207,9 +200,6 @@ class UIConfig:
             return self.logo_text
         if self.institution_name:
             words = [w for w in self.institution_name.split() if w and w[0].isalpha()]
-            initials = (
-                "".join(w[0].upper() for w in words[:2])
-                or self.institution_name[:2].upper()
-            )
+            initials = "".join(w[0].upper() for w in words[:2]) or self.institution_name[:2].upper()
             return initials
         return ""

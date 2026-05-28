@@ -11,14 +11,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-import pandas as pd
-
 if TYPE_CHECKING:
     from siamang.data.survey_data import SurveyData
 
 try:
-    import matplotlib.pyplot as plt
     import matplotlib
+    import matplotlib.pyplot as plt
 
     matplotlib.rcParams["figure.dpi"] = 100
 except ImportError:
@@ -33,19 +31,19 @@ except ImportError:
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 
 
-def _get_label(data: "SurveyData", var_name: str) -> str:
+def _get_label(data: SurveyData, var_name: str) -> str:
     if data.variables and var_name in data.variables:
         return data.variables[var_name].label or var_name
     return var_name
 
 
-def _get_value_labels(data: "SurveyData", var_name: str) -> dict[Any, str]:
+def _get_value_labels(data: SurveyData, var_name: str) -> dict[Any, str]:
     if data.variables and var_name in data.variables:
         return data.variables[var_name].labels or {}
     return {}
 
 
-def _get_scale(data: "SurveyData", var_name: str) -> str | None:
+def _get_scale(data: SurveyData, var_name: str) -> str | None:
     if data.variables and var_name in data.variables:
         return data.variables[var_name].scale
     return None
@@ -54,8 +52,7 @@ def _get_scale(data: "SurveyData", var_name: str) -> str | None:
 def _require_matplotlib():
     if plt is None:
         raise ImportError(
-            "matplotlib is required for chart generation. "
-            "Install it with: pip install matplotlib"
+            "matplotlib is required for chart generation. Install it with: pip install matplotlib"
         )
 
 
@@ -78,7 +75,7 @@ class SurveyChart:
         Override the auto-generated title.
     """
 
-    data: "SurveyData"
+    data: SurveyData
     figsize: tuple[float, float] = (10, 6)
     palette: str = "muted"
     title: str | None = None
@@ -155,7 +152,6 @@ class BarChart(SurveyChart):
         self._ax = ax
 
         col_label = _get_label(self.data, self.column)
-        col_scale = _get_scale(self.data, self.column)
         value_labels = _get_value_labels(self.data, self.column)
 
         if self.by is None:
@@ -169,11 +165,15 @@ class BarChart(SurveyChart):
                 labels = [str(v) for v in counts.index]
 
             if self.horizontal:
-                ax.barh(labels, counts.values, color=sns.color_palette(self.palette) if sns else None)
+                ax.barh(
+                    labels, counts.values, color=sns.color_palette(self.palette) if sns else None
+                )
                 ax.set_xlabel("Count")
                 ax.set_ylabel(col_label)
             else:
-                ax.bar(labels, counts.values, color=sns.color_palette(self.palette) if sns else None)
+                ax.bar(
+                    labels, counts.values, color=sns.color_palette(self.palette) if sns else None
+                )
                 ax.set_ylabel("Count")
                 ax.set_xlabel(col_label)
                 plt.xticks(rotation=30, ha="right")
@@ -261,9 +261,7 @@ class BoxPlot(SurveyChart):
         frame = self.data.frame[[self.column, self.by]].dropna().copy()
 
         if by_value_labels:
-            frame["_group"] = frame[self.by].map(
-                lambda v: by_value_labels.get(v, str(v))
-            )
+            frame["_group"] = frame[self.by].map(lambda v: by_value_labels.get(v, str(v)))
             order = [by_value_labels.get(v, str(v)) for v in sorted(by_value_labels.keys())]
         else:
             frame["_group"] = frame[self.by].astype(str)
@@ -271,13 +269,25 @@ class BoxPlot(SurveyChart):
 
         if sns:
             sns.boxplot(
-                data=frame, x="_group", y=self.column, hue="_group",
-                ax=ax, palette=self.palette, order=order, legend=False
+                data=frame,
+                x="_group",
+                y=self.column,
+                hue="_group",
+                ax=ax,
+                palette=self.palette,
+                order=order,
+                legend=False,
             )
             if self.show_points:
                 sns.stripplot(
-                    data=frame, x="_group", y=self.column,
-                    ax=ax, color="0.3", alpha=0.4, size=3, order=order
+                    data=frame,
+                    x="_group",
+                    y=self.column,
+                    ax=ax,
+                    color="0.3",
+                    alpha=0.4,
+                    size=3,
+                    order=order,
                 )
         else:
             groups = [g[self.column].values for _, g in frame.groupby("_group")]
@@ -352,8 +362,14 @@ class HeatMap(SurveyChart):
             matrix = grouped.T
 
             sns.heatmap(
-                matrix, annot=self.annot, fmt=".2f", cmap=self.cmap,
-                vmin=self.vmin, vmax=self.vmax, ax=ax, linewidths=0.5
+                matrix,
+                annot=self.annot,
+                fmt=".2f",
+                cmap=self.cmap,
+                vmin=self.vmin,
+                vmax=self.vmax,
+                ax=ax,
+                linewidths=0.5,
             )
             ax.set_title(self._auto_title("Mean Values", by_label))
             ax.set_xlabel(by_label)
@@ -366,8 +382,15 @@ class HeatMap(SurveyChart):
             corr.columns = col_labels
 
             sns.heatmap(
-                corr, annot=self.annot, fmt=".2f", cmap="RdBu_r",
-                vmin=-1, vmax=1, ax=ax, linewidths=0.5, center=0
+                corr,
+                annot=self.annot,
+                fmt=".2f",
+                cmap="RdBu_r",
+                vmin=-1,
+                vmax=1,
+                ax=ax,
+                linewidths=0.5,
+                center=0,
             )
             ax.set_title(self._auto_title("Spearman Correlation Matrix"))
 
@@ -422,9 +445,7 @@ class ScatterPlot(SurveyChart):
         if self.hue:
             hue_labels = _get_value_labels(self.data, self.hue)
             if hue_labels:
-                frame["_hue"] = frame[self.hue].map(
-                    lambda v: hue_labels.get(v, str(v))
-                )
+                frame["_hue"] = frame[self.hue].map(lambda v: hue_labels.get(v, str(v)))
                 hue_col = "_hue"
             else:
                 hue_col = self.hue
@@ -437,8 +458,13 @@ class ScatterPlot(SurveyChart):
 
         if self.trendline and self.hue is None:
             sns.regplot(
-                data=frame, x=self.x, y=self.y,
-                ax=ax, scatter=False, color="red", line_kws={"linewidth": 1.5}
+                data=frame,
+                x=self.x,
+                y=self.y,
+                ax=ax,
+                scatter=False,
+                color="red",
+                line_kws={"linewidth": 1.5},
             )
 
         ax.set_xlabel(x_label)

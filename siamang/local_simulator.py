@@ -9,7 +9,6 @@ import pandas as pd
 
 from siamang.core.expression import Expression
 from siamang.core.page import Page
-from siamang.core.block import Block
 from siamang.core.question import (
     LikertScale,
     Matrix,
@@ -26,7 +25,7 @@ def _simulate_value(question: Question, var=None):
     """Simulate a single value for a question (or a specific variable within a Matrix)."""
     if isinstance(question, NumericInput):
         v = var or question.var
-        if hasattr(v, 'valid_range') and v.valid_range:
+        if hasattr(v, "valid_range") and v.valid_range:
             lo, hi = v.valid_range
             return random.randint(int(lo), int(hi))
         return random.randint(18, 70)
@@ -86,9 +85,7 @@ def _simulate_wide_multichoice(question: MultiChoice) -> dict[str, int]:
     min_answers = min(question.min_answers, max_answers)
     count = random.randint(min_answers, max_answers) if max_answers > 0 else 0
     selected = (
-        set(random.sample([variable.name for variable in variables], count))
-        if count
-        else set()
+        set(random.sample([variable.name for variable in variables], count)) if count else set()
     )
     return {variable.name: int(variable.name in selected) for variable in variables}
 
@@ -113,9 +110,11 @@ def _evaluate_condition(condition: Any, answers: dict[str, Any]) -> bool:
 
 def _question_variable_names(question: Question) -> list[str]:
     """Get all variable names produced by a question."""
-    if isinstance(question, MultiChoice) and question.mode == "wide":
-        return [v.name for v in question.var]
-    elif isinstance(question.var, list):
+    if (
+        isinstance(question, MultiChoice)
+        and question.mode == "wide"
+        or isinstance(question.var, list)
+    ):
         return [v.name for v in question.var]
     else:
         return [question.var.name]
@@ -134,10 +133,11 @@ def _simulate_question_into_row(question: Question, row: dict[str, Any]) -> None
 
 def _set_question_missing(question: Question, row: dict[str, Any]) -> None:
     """Set all variables for a question to None (missing/NaN)."""
-    if isinstance(question, MultiChoice) and question.mode == "wide":
-        for var in question.var:
-            row[var.name] = None
-    elif isinstance(question.var, list):
+    if (
+        isinstance(question, MultiChoice)
+        and question.mode == "wide"
+        or isinstance(question.var, list)
+    ):
         for var in question.var:
             row[var.name] = None
     else:
@@ -163,9 +163,7 @@ def simulate_dataframe(
     return pd.DataFrame(rows)
 
 
-def simulate_from_pages(
-    pages: list[Page], n: int = 100, seed: int | None = 42
-) -> pd.DataFrame:
+def simulate_from_pages(pages: list[Page], n: int = 100, seed: int | None = 42) -> pd.DataFrame:
     """Simulate responses respecting page-level and question-level show_if/hide_if.
 
     For each simulated respondent, pages are processed in order. A page's

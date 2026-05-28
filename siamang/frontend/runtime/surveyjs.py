@@ -10,7 +10,6 @@ from string import Template
 from siamang.frontend import constants
 from siamang.frontend.runtime.base import RuntimeAdapter, RuntimeRenderContext
 
-
 _CLOSED_REASONS = {
     "deadline": (
         "Survey closed",
@@ -78,9 +77,7 @@ def _header_html(context: RuntimeRenderContext) -> str:
     if not (show_logo or show_title or show_institution or show_subtitle):
         return ""
 
-    parts: list[str] = [
-        f'<header class="siamang-header {html.escape(ui.logo_position)}">'
-    ]
+    parts: list[str] = [f'<header class="siamang-header {html.escape(ui.logo_position)}">']
     if show_logo:
         parts.append(
             f'<img class="siamang-header__logo" src="{html.escape(ui.logo_url or "")}" '
@@ -88,9 +85,7 @@ def _header_html(context: RuntimeRenderContext) -> str:
         )
     parts.append('<div class="siamang-header__text">')
     if show_title:
-        parts.append(
-            f'<h1 class="siamang-header__title">{html.escape(schema.title)}</h1>'
-        )
+        parts.append(f'<h1 class="siamang-header__title">{html.escape(schema.title)}</h1>')
     if show_institution:
         parts.append(
             f'<p class="siamang-header__institution">{html.escape(ui.institution_name or "")}</p>'

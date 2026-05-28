@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from datetime import datetime
-import re
 
 from siamang.core.block import Block
 from siamang.core.expression import Expression
@@ -67,9 +67,7 @@ class Questionnaire:
                 if not page.name.strip():
                     raise ValueError("Page name must not be empty.")
                 if page.name in page_names:
-                    raise ValueError(
-                        f"Duplicate page name in questionnaire: {page.name}"
-                    )
+                    raise ValueError(f"Duplicate page name in questionnaire: {page.name}")
                 page_names.add(page.name)
             self._validate_page_expressions()
             self._validate_page_expressions_for_export("surveyjs")
@@ -77,16 +75,11 @@ class Questionnaire:
         # Validate scripts
         for script in self.scripts:
             if script.trigger not in _VALID_TRIGGERS:
-                raise ValueError(
-                    f"Script '{script.name}' has unknown trigger '{script.trigger}'."
-                )
+                raise ValueError(f"Script '{script.name}' has unknown trigger '{script.trigger}'.")
             if script.target:
                 all_q_ids = {question_output_name(q) for q in self.all_questions()}
                 all_page_names = {p.name for p in (self.pages or [])}
-                if (
-                    script.target not in all_q_ids
-                    and script.target not in all_page_names
-                ):
+                if script.target not in all_q_ids and script.target not in all_page_names:
                     raise ValueError(
                         f"Script '{script.name}' targets '{script.target}' "
                         f"which is not a known question ID or page name."
@@ -101,15 +94,9 @@ class Questionnaire:
                 if self.variables is not None:
                     known = self.variables.require(var.name)
                     if known != var:
-                        raise ValueError(
-                            f"Variable '{var.name}' differs from registry instance."
-                        )
+                        raise ValueError(f"Variable '{var.name}' differs from registry instance.")
         if strict:
-            errors = [
-                issue
-                for issue in self.lint(level="strict")
-                if issue.severity == "error"
-            ]
+            errors = [issue for issue in self.lint(level="strict") if issue.severity == "error"]
             if errors:
                 codes = ", ".join(issue.code for issue in errors)
                 raise ValueError(f"Strict questionnaire validation failed: {codes}")
@@ -172,9 +159,7 @@ class Questionnaire:
         ui = options.pop("ui", None) or UIConfig()
         runtime = options.pop("runtime", None) or ReactRuntime()
         builder = FrontendBuilder(ui=ui, runtime=runtime)
-        pipeline = DeployPipeline(
-            backend=backend_obj, frontend=frontend_obj, builder=builder
-        )
+        pipeline = DeployPipeline(backend=backend_obj, frontend=frontend_obj, builder=builder)
         return pipeline.run(self, options=options or None)
 
     def simulate(self, n: int = 100, seed: int | None = 42):
@@ -236,9 +221,7 @@ class Questionnaire:
         known_vars = {
             variable.name
             for question in self.all_questions()
-            for variable in (
-                question.var if isinstance(question.var, list) else [question.var]
-            )
+            for variable in (question.var if isinstance(question.var, list) else [question.var])
         }
         pattern = re.compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
         probe_answers = {name: 0 for name in known_vars}
@@ -247,9 +230,7 @@ class Questionnaire:
             if condition is None:
                 return
             if not isinstance(condition, (Expression, str)):
-                raise ValueError(
-                    f"{location} {field} must be str or Expression."
-                )
+                raise ValueError(f"{location} {field} must be str or Expression.")
             if isinstance(condition, Expression):
                 referenced = condition.variables()
                 expr = condition
@@ -259,8 +240,7 @@ class Questionnaire:
             unknown = referenced - known_vars
             if unknown:
                 raise ValueError(
-                    f"{location} {field} references unknown variables: "
-                    f"{', '.join(sorted(unknown))}"
+                    f"{location} {field} references unknown variables: {', '.join(sorted(unknown))}"
                 )
             if expr is None:
                 return
@@ -268,9 +248,7 @@ class Questionnaire:
                 expr.validate(known_vars)
                 expr.evaluate(probe_answers)
             except Exception as exc:
-                raise ValueError(
-                    f"{location} has invalid {field} expression."
-                ) from exc
+                raise ValueError(f"{location} has invalid {field} expression.") from exc
 
         for page in self.pages:
             check(page.show_if, "show_if", f"Page '{page.name}'")
@@ -306,9 +284,7 @@ class Questionnaire:
 
     def _validate_page_expressions_for_export(self, target: str) -> None:
         if target != "surveyjs":
-            raise ValueError(
-                f"Unsupported export target for expression validation: {target}"
-            )
+            raise ValueError(f"Unsupported export target for expression validation: {target}")
         allowed_pattern = re.compile(r"^[\s\w{}<>=!.'&|()\-+*/]+$")
         for page in self.pages:
             if page.show_if is None:
@@ -437,9 +413,7 @@ def _strict_question_warnings(questions: list[Question]) -> list[LintWarning]:
         if isinstance(question, SingleChoice):
             warnings.extend(_categorical_label_warnings(question_id, [question.var]))
         if isinstance(question, MultiChoice):
-            warnings.extend(
-                _categorical_label_warnings(question_id, _question_variables(question))
-            )
+            warnings.extend(_categorical_label_warnings(question_id, _question_variables(question)))
     return warnings
 
 
@@ -467,9 +441,7 @@ def _page_to_dict(page: Page, question_to_dict_fn) -> dict:
     payload = {
         "name": page.name,
         "title": page.title,
-        "elements": [
-            question_to_dict_fn(question) for question in page.flatten_questions()
-        ],
+        "elements": [question_to_dict_fn(question) for question in page.flatten_questions()],
     }
     if page.randomize_blocks:
         payload["randomizeBlocks"] = True
@@ -534,9 +506,7 @@ def _validate_targets_exist(pages: list[Page]) -> None:
     for page in pages:
         for target in _iter_targets(page):
             if target not in known:
-                raise ValueError(
-                    f"Unknown target page in navigation: {page.name} -> {target}"
-                )
+                raise ValueError(f"Unknown target page in navigation: {page.name} -> {target}")
 
 
 def _validate_reachability(pages: list[Page], graph: dict[str, set[str]]) -> None:
@@ -554,6 +524,4 @@ def _validate_reachability(pages: list[Page], graph: dict[str, set[str]]) -> Non
             stack.append(nxt)
     unreachable = [page.name for page in pages if page.name not in reached]
     if unreachable:
-        raise ValueError(
-            f"Unreachable pages in navigation graph: {', '.join(unreachable)}"
-        )
+        raise ValueError(f"Unreachable pages in navigation graph: {', '.join(unreachable)}")

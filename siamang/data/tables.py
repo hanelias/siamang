@@ -53,9 +53,7 @@ class SurveyTables:
         for row in rows:
             for column in columns:
                 parts.append(
-                    _banner_pair(
-                        self.frame, row, column, weight_column, self.variables, labels
-                    )
+                    _banner_pair(self.frame, row, column, weight_column, self.variables, labels)
                 )
         if not parts:
             return BannerTable(pd.DataFrame())
@@ -76,9 +74,7 @@ def _banner_pair(
         grouped = data.groupby([row, column], dropna=False).size().reset_index(name="n")
     else:
         grouped = (
-            data.groupby([row, column], dropna=False)[weight_column]
-            .sum()
-            .reset_index(name="n")
+            data.groupby([row, column], dropna=False)[weight_column].sum().reset_index(name="n")
         )
     grouped["column_total"] = grouped.groupby(column)["n"].transform("sum")
     grouped["percent"] = grouped["n"] / grouped["column_total"].replace({0: pd.NA})

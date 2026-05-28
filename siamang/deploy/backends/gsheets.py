@@ -11,10 +11,12 @@ The service account email must have Editor access to the target spreadsheet.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import uuid
 from dataclasses import dataclass, field
+from datetime import UTC
 from typing import TYPE_CHECKING, Any
 
 import pandas as pd
@@ -155,7 +157,7 @@ class GoogleSheetsBackend(BackendAdapter):
         self.spreadsheet_id = spreadsheet_id
         return spreadsheet_id
 
-    def provision(self, schema: "SurveySchema") -> BackendConfig:
+    def provision(self, schema: SurveySchema) -> BackendConfig:
         """Create or configure the spreadsheet for this survey.
 
         Sets up:
@@ -202,12 +204,14 @@ class GoogleSheetsBackend(BackendAdapter):
         # Write quota counters to _quotas sheet
         quota_rows = [["variable", "value", "target", "current"]]
         for quota in schema.quotas:
-            quota_rows.append([
-                quota["variable"],
-                json.dumps(quota["target_value"]),
-                quota["limit"],
-                0,
-            ])
+            quota_rows.append(
+                [
+                    quota["variable"],
+                    json.dumps(quota["target_value"]),
+                    quota["limit"],
+                    0,
+                ]
+            )
         self.service.spreadsheets().values().update(
             spreadsheetId=spreadsheet_id,
             range="_quotas!A1",
@@ -241,16 +245,21 @@ class GoogleSheetsBackend(BackendAdapter):
         response_id = uuid.uuid4().hex[:16]
 
         # Read headers to know column order
-        result = self.service.spreadsheets().values().get(
-            spreadsheetId=self.spreadsheet_id,
-            range=f"{self.sheet_name}!1:1",
-        ).execute()
+        result = (
+            self.service.spreadsheets()
+            .values()
+            .get(
+                spreadsheetId=self.spreadsheet_id,
+                range=f"{self.sheet_name}!1:1",
+            )
+            .execute()
+        )
         headers = result.get("values", [[]])[0]
 
         # Build row in header order
-        from datetime import datetime, timezone
+        from datetime import datetime
 
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         row = []
         for col in headers:
             if col == "_response_id":
@@ -280,10 +289,15 @@ class GoogleSheetsBackend(BackendAdapter):
 
     def get_responses(self, survey_id: str) -> pd.DataFrame:
         """Read all responses from the spreadsheet as a DataFrame."""
-        result = self.service.spreadsheets().values().get(
-            spreadsheetId=self.spreadsheet_id,
-            range=f"{self.sheet_name}",
-        ).execute()
+        result = (
+            self.service.spreadsheets()
+            .values()
+            .get(
+                spreadsheetId=self.spreadsheet_id,
+                range=f"{self.sheet_name}",
+            )
+            .execute()
+        )
 
         values = result.get("values", [])
         if len(values) < 2:
@@ -305,10 +319,8 @@ class GoogleSheetsBackend(BackendAdapter):
         for col in df.columns:
             if col.startswith("_"):
                 continue
-            try:
+            with contextlib.suppress(ValueError, TypeError):
                 df[col] = pd.to_numeric(df[col], errors="coerce")
-            except (ValueError, TypeError):
-                pass
 
         # Replace empty strings with NaN
         df = df.replace("", pd.NA)
@@ -317,10 +329,15 @@ class GoogleSheetsBackend(BackendAdapter):
 
     def check_quota(self, survey_id: str, variable: str, value: Any) -> bool:
         """Check if a quota cell still has capacity."""
-        result = self.service.spreadsheets().values().get(
-            spreadsheetId=self.spreadsheet_id,
-            range="_quotas!A:D",
-        ).execute()
+        result = (
+            self.service.spreadsheets()
+            .values()
+            .get(
+                spreadsheetId=self.spreadsheet_id,
+                range="_quotas!A:D",
+            )
+            .execute()
+        )
 
         values = result.get("values", [])
         if len(values) < 2:
@@ -341,10 +358,15 @@ class GoogleSheetsBackend(BackendAdapter):
         Note: Google Sheets doesn't support true atomic operations, so there's a
         small race condition window. For high-concurrency surveys, use Supabase instead.
         """
-        result = self.service.spreadsheets().values().get(
-            spreadsheetId=self.spreadsheet_id,
-            range="_quotas!A:D",
-        ).execute()
+        result = (
+            self.service.spreadsheets()
+            .values()
+            .get(
+                spreadsheetId=self.spreadsheet_id,
+                range="_quotas!A:D",
+            )
+            .execute()
+        )
 
         values = result.get("values", [])
         if len(values) < 2:
@@ -370,9 +392,14 @@ class GoogleSheetsBackend(BackendAdapter):
 
     def get_response_count(self, survey_id: str) -> int:
         """Return the number of responses collected so far."""
-        result = self.service.spreadsheets().values().get(
-            spreadsheetId=self.spreadsheet_id,
-            range=f"{self.sheet_name}!A:A",
-        ).execute()
+        result = (
+            self.service.spreadsheets()
+            .values()
+            .get(
+                spreadsheetId=self.spreadsheet_id,
+                range=f"{self.sheet_name}!A:A",
+            )
+            .execute()
+        )
         values = result.get("values", [])
         return max(0, len(values) - 1)  # Subtract header row

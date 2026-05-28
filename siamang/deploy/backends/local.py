@@ -73,7 +73,7 @@ class LocalBackend(BackendAdapter):
             conn.executescript(_SCHEMA_SQL)
             conn.commit()
 
-    def provision(self, schema: "SurveySchema") -> BackendConfig:
+    def provision(self, schema: SurveySchema) -> BackendConfig:
         survey_id = uuid.uuid4().hex[:12]
         with closing(sqlite3.connect(self.path)) as conn:
             conn.execute(

@@ -13,7 +13,6 @@ Deployment methods:
 from __future__ import annotations
 
 import io
-import json
 import os
 import tempfile
 import zipfile
@@ -126,7 +125,7 @@ class NetlifyFrontend(FrontendAdapter):
         """Generate Netlify _redirects for SPA routing."""
         return "/*    /index.html   200\n"
 
-    def publish(self, bundle: "SurveyBundle", config: "BackendConfig") -> str:
+    def publish(self, bundle: SurveyBundle, config: BackendConfig) -> str:
         """Deploy the survey bundle to Netlify.
 
         Returns the public URL of the deployed site.
@@ -154,9 +153,7 @@ class NetlifyFrontend(FrontendAdapter):
 
         return self._publish_cli(files, config)
 
-    def _publish_rest(
-        self, files: dict[str, str | bytes], config: "BackendConfig"
-    ) -> str:
+    def _publish_rest(self, files: dict[str, str | bytes], config: BackendConfig) -> str:
         """Deploy via Netlify REST API using ZIP upload method."""
         # Ensure we have a site
         if not self.site_id:
@@ -202,9 +199,7 @@ class NetlifyFrontend(FrontendAdapter):
                         f"Netlify deploy failed: {poll_body.get('error_message', 'unknown error')}"
                     )
             else:
-                raise RuntimeError(
-                    f"Netlify deploy timed out (last state: {state})"
-                )
+                raise RuntimeError(f"Netlify deploy timed out (last state: {state})")
 
         # Extract URL
         url = body.get("ssl_url") or body.get("url") or body.get("deploy_ssl_url")
@@ -215,9 +210,7 @@ class NetlifyFrontend(FrontendAdapter):
 
         return url
 
-    def _publish_cli(
-        self, files: dict[str, str | bytes], config: "BackendConfig"
-    ) -> str:
+    def _publish_cli(self, files: dict[str, str | bytes], config: BackendConfig) -> str:
         """Deploy via Netlify CLI as fallback."""
         from siamang.frontend.bundle import SurveyBundle
 

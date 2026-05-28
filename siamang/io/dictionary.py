@@ -13,9 +13,7 @@ class DictionaryWriter:
         output = Path(path)
         output.parent.mkdir(parents=True, exist_ok=True)
         payload = variables.to_dict()
-        output.write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
+        output.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         return output
 
 

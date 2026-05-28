@@ -49,9 +49,7 @@ ROOT = Path(__file__).resolve().parent.parent
 JSX_DIR = ROOT / "siamang" / "frontend" / "templates" / "react"
 OUT = JSX_DIR / "dist" / "bundle.js"
 
-_DESTRUCTURE_RE = re.compile(
-    r"^\s*const\s*\{[^}]+\}\s*=\s*React\s*;\s*\n", re.MULTILINE
-)
+_DESTRUCTURE_RE = re.compile(r"^\s*const\s*\{[^}]+\}\s*=\s*React\s*;\s*\n", re.MULTILINE)
 
 _PREAMBLE = (
     "/* siamang bundled runtime — produced by scripts/build_react_bundle.py.\n"
@@ -95,7 +93,7 @@ def _run(cmd: list[str], *, input_text: str | None = None, cwd: Path | None = No
             f"\n[build] {cmd[0]!r} not found on PATH. Install Node and run\n"
             f"        npm install -g sucrase esbuild\n"
             f"        before retrying.\nOriginal error: {exc}"
-        )
+        ) from exc
     if result.returncode != 0:
         raise SystemExit(
             f"\n[build] {' '.join(cmd)} failed (exit {result.returncode}).\n"
@@ -106,28 +104,41 @@ def _run(cmd: list[str], *, input_text: str | None = None, cwd: Path | None = No
 
 def _transpile_with_sucrase(combined: str) -> str:
     """Convert JSX → JS. Sucrase needs a directory, so we make a temp one."""
-    with tempfile.TemporaryDirectory(prefix="sm-jsx-src-") as src_dir, \
-         tempfile.TemporaryDirectory(prefix="sm-jsx-out-") as out_dir:
+    with (
+        tempfile.TemporaryDirectory(prefix="sm-jsx-src-") as src_dir,
+        tempfile.TemporaryDirectory(prefix="sm-jsx-out-") as out_dir,
+    ):
         jsx_path = Path(src_dir) / "bundle.jsx"
         jsx_path.write_text(combined, encoding="utf-8")
-        _run([
-            "npx", "--yes", "sucrase",
-            src_dir,
-            "--transforms", "jsx",
-            "--production",
-            "--out-dir", out_dir,
-        ])
+        _run(
+            [
+                "npx",
+                "--yes",
+                "sucrase",
+                src_dir,
+                "--transforms",
+                "jsx",
+                "--production",
+                "--out-dir",
+                out_dir,
+            ]
+        )
         return (Path(out_dir) / "bundle.js").read_text(encoding="utf-8")
 
 
 def _minify_with_esbuild(js: str) -> str:
     """Minify the transpiled JS. esbuild reads from stdin with --loader=js."""
-    return _run([
-        "npx", "--yes", "esbuild",
-        "--minify",
-        "--target=es2020",
-        "--loader=js",
-    ], input_text=js)
+    return _run(
+        [
+            "npx",
+            "--yes",
+            "esbuild",
+            "--minify",
+            "--target=es2020",
+            "--loader=js",
+        ],
+        input_text=js,
+    )
 
 
 def build() -> str:
@@ -142,9 +153,10 @@ def build() -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
-        "--check", action="store_true",
+        "--check",
+        action="store_true",
         help="build but don't write; fail with exit code 2 if the existing "
-             "dist/bundle.js differs (CI-friendly drift detection).",
+        "dist/bundle.js differs (CI-friendly drift detection).",
     )
     args = parser.parse_args(argv)
 
@@ -159,7 +171,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.check:
         if not OUT.exists():
-            print(f"[build] dist/bundle.js is missing.", file=sys.stderr)
+            print("[build] dist/bundle.js is missing.", file=sys.stderr)
             return 2
         existing = OUT.read_text(encoding="utf-8")
         if existing.strip() != new_bundle.strip():

@@ -138,9 +138,7 @@ def _missing_from_ranges(
     labels = labels or {}
     missing = []
     for code in _discrete_missing_codes(ranges):
-        missing.append(
-            MissingValue(code, labels.get(code) or str(code), "system_missing")
-        )
+        missing.append(MissingValue(code, labels.get(code) or str(code), "system_missing"))
     return tuple(missing)
 
 

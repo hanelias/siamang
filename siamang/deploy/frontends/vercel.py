@@ -80,7 +80,7 @@ class VercelFrontend(FrontendAdapter):
         if self.session is None:
             self.session = _default_session()
 
-    def publish(self, bundle: "SurveyBundle", config: "BackendConfig") -> str:
+    def publish(self, bundle: SurveyBundle, config: BackendConfig) -> str:
         # Add vercel.json with security headers + cache config
         config_str = json.dumps(_VERCEL_CONFIG, indent=2, ensure_ascii=False)
 
@@ -126,9 +126,7 @@ class VercelFrontend(FrontendAdapter):
         SurveyBundle(files=files, manifest=bundle.manifest).write_to(str(deploy_dir))
         return str(deploy_dir)
 
-    def _publish_rest(
-        self, files: dict[str, str | bytes], config: "BackendConfig"
-    ) -> str:
+    def _publish_rest(self, files: dict[str, str | bytes], config: BackendConfig) -> str:
         files_payload = []
         for relative, content in files.items():
             if isinstance(content, bytes):
@@ -165,9 +163,7 @@ class VercelFrontend(FrontendAdapter):
             raise RuntimeError(f"Vercel response missing 'url': {body!r}")
         return f"https://{host}" if not host.startswith("http") else host
 
-    def _publish_cli(
-        self, files: dict[str, str | bytes], config: "BackendConfig"
-    ) -> str:
+    def _publish_cli(self, files: dict[str, str | bytes], config: BackendConfig) -> str:
         from siamang.frontend.bundle import SurveyBundle
 
         with tempfile.TemporaryDirectory() as tmp:

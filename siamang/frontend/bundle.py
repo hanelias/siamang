@@ -39,9 +39,7 @@ class SurveyBundle:
         """Return the bundle packaged as a single ZIP archive."""
 
         buffer = BytesIO()
-        with zipfile.ZipFile(
-            buffer, mode="w", compression=zipfile.ZIP_DEFLATED
-        ) as archive:
+        with zipfile.ZipFile(buffer, mode="w", compression=zipfile.ZIP_DEFLATED) as archive:
             for relative, content in self.files.items():
                 if isinstance(content, str):
                     archive.writestr(relative, content.encode("utf-8"))
@@ -65,7 +63,7 @@ class SurveyBundle:
                 h.update(content)
         return h.hexdigest()[:16]
 
-    def with_hashed_filenames(self) -> "SurveyBundle":
+    def with_hashed_filenames(self) -> SurveyBundle:
         """Return a new bundle with content-hashed filenames for cache busting.
 
         E.g. app.js -> app.a1b2c3d4.js

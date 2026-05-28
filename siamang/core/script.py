@@ -23,7 +23,6 @@ import json
 from dataclasses import dataclass, field
 from typing import Any
 
-
 _VALID_TRIGGERS = {
     "onInit",  # Runs once when survey loads (before first page)
     "onPageEnter",  # Runs when a page becomes visible
@@ -73,9 +72,7 @@ class Script:
     def __post_init__(self) -> None:
         if self.trigger not in _VALID_TRIGGERS:
             allowed = ", ".join(sorted(_VALID_TRIGGERS))
-            raise ValueError(
-                f"Unknown trigger '{self.trigger}'. Allowed triggers: {allowed}."
-            )
+            raise ValueError(f"Unknown trigger '{self.trigger}'. Allowed triggers: {allowed}.")
         if not self.code.strip():
             raise ValueError("Script code must not be empty.")
         if self.name is not None and not self.name.strip():
@@ -92,7 +89,7 @@ class Script:
         }
 
     @classmethod
-    def randomize_options(cls, question_id: str, seed: str | None = None) -> "Script":
+    def randomize_options(cls, question_id: str, seed: str | None = None) -> Script:
         """Factory: create a script that randomizes answer options for a question."""
         qid = json.dumps(question_id)
         code = f"""
@@ -111,7 +108,7 @@ class Script:
         )
 
     @classmethod
-    def randomize_pages(cls) -> "Script":
+    def randomize_pages(cls) -> Script:
         """Factory: shuffle all visible page order on init."""
         code = """
             // Shuffle all visible pages except the first (welcome) and last
@@ -133,7 +130,7 @@ class Script:
     @classmethod
     def validate_fields_match(
         cls, field_a: str, field_b: str, message: str = "Fields do not match."
-    ) -> "Script":
+    ) -> Script:
         """Factory: validate that two answer fields have the same value."""
         fa = json.dumps(field_a)
         fb = json.dumps(field_b)
@@ -141,7 +138,7 @@ class Script:
         code = f"""
             const fa = {fa};
             const fb = {fb};
-            if (answers[fa] !== undefined && 
+            if (answers[fa] !== undefined &&
                 answers[fb] !== undefined &&
                 answers[fa] !== answers[fb]) {{
                 answers.__errors__[fb] = {msg};
@@ -155,7 +152,7 @@ class Script:
         )
 
     @classmethod
-    def timed_question(cls, question_id: str, seconds: int = 30) -> "Script":
+    def timed_question(cls, question_id: str, seconds: int = 30) -> Script:
         """Factory: show a question for limited time, then auto-advance."""
         qid = json.dumps(question_id)
         timeout_ms = seconds * 1000

@@ -89,7 +89,7 @@ class ReactRuntime(RuntimeAdapter):
         _ = precompile
         # Cache: bundled source + whether already JS.
         self._bundle_src: str | None = None
-        self._compiled_ok: bool | None = None    # None = not yet attempted
+        self._compiled_ok: bool | None = None  # None = not yet attempted
 
     def _get_or_compile(self) -> tuple[str, bool]:
         """Return ``(bundle_source, compiled_to_js)`` from packaged assets."""

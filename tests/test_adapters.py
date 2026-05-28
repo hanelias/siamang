@@ -3,15 +3,15 @@
 Uses mocks to avoid requiring real API credentials.
 """
 
-import json
 import os
 import sys
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 
 # ─── Test: Registry resolves new adapters ────────────────────────────────────
+
 
 def test_registry_lists_gsheets_and_netlify():
     from siamang.deploy.registry import list_backends, list_frontends
@@ -37,6 +37,7 @@ def test_registry_factory_resolves():
 
 
 # ─── Test: GoogleSheetsBackend ───────────────────────────────────────────────
+
 
 def test_gsheets_backend_init():
     """Test that GoogleSheetsBackend can be instantiated without credentials."""
@@ -168,6 +169,7 @@ def test_gsheets_check_quota_mock():
 
 # ─── Test: NetlifyFrontend ───────────────────────────────────────────────────
 
+
 def test_netlify_frontend_init():
     """Test NetlifyFrontend initialization."""
     os.environ["NETLIFY_AUTH_TOKEN"] = "test_token_123"
@@ -182,9 +184,10 @@ def test_netlify_frontend_init():
 
 def test_netlify_build_zip():
     """Test ZIP creation from bundle files."""
-    from siamang.deploy.frontends.netlify import NetlifyFrontend
-    import zipfile
     import io
+    import zipfile
+
+    from siamang.deploy.frontends.netlify import NetlifyFrontend
 
     frontend = NetlifyFrontend(token="fake")
 
@@ -206,7 +209,9 @@ def test_netlify_build_zip():
         content = zf.read("index.html").decode("utf-8")
         assert "Hello" in content
 
-    print(f"✓ NetlifyFrontend._build_zip() creates valid ZIP ({len(zip_data)} bytes, {len(names)} files)")
+    print(
+        f"✓ NetlifyFrontend._build_zip() creates valid ZIP ({len(zip_data)} bytes, {len(names)} files)"
+    )
 
 
 def test_netlify_publish_rest_mock():
@@ -248,9 +253,9 @@ def test_netlify_publish_rest_mock():
 
 def test_netlify_publish_local_fallback():
     """Test that publish falls back to local write when no token."""
-    from siamang.deploy.frontends.netlify import NetlifyFrontend
-    import tempfile
     import shutil
+
+    from siamang.deploy.frontends.netlify import NetlifyFrontend
 
     # Clear env var to ensure no token
     os.environ.pop("NETLIFY_AUTH_TOKEN", None)
@@ -271,8 +276,8 @@ def test_netlify_publish_local_fallback():
     print(f"✓ NetlifyFrontend local fallback writes to: {result}")
 
     # Cleanup
-    import shutil
     from pathlib import Path
+
     deploy_path = Path(result)
     if deploy_path.exists():
         shutil.rmtree(deploy_path)
@@ -280,10 +285,11 @@ def test_netlify_publish_local_fallback():
 
 # ─── Test: GoogleSheetsClientTemplate ────────────────────────────────────────
 
+
 def test_gsheets_client_template():
     """Test that the client template renders valid JS."""
-    from siamang.frontend.client.gsheets import GoogleSheetsClientTemplate
     from siamang.frontend.client.base import ClientEnv
+    from siamang.frontend.client.gsheets import GoogleSheetsClientTemplate
 
     template = GoogleSheetsClientTemplate()
     env = ClientEnv(
@@ -307,6 +313,7 @@ def test_gsheets_client_template():
 
 
 # ─── Test: Pipeline integration ──────────────────────────────────────────────
+
 
 def test_pipeline_client_for_gsheets():
     """Test that pipeline resolves gsheets client template."""
@@ -345,10 +352,11 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"✗ {test.__name__}: {e}")
             import traceback
+
             traceback.print_exc()
             failed += 1
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Results: {passed} passed, {failed} failed, {passed + failed} total")
     if failed:
         sys.exit(1)

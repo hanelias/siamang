@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from statistics import NormalDist
 
 import pandas as pd
+
 from siamang.core.variable import VariableMap
 
 
@@ -59,11 +60,7 @@ class DataAnalysis:
             if weighted:
                 weights = group[self.weight_column].astype(float)
                 weight_sum = float(weights.sum())
-                mean_value = (
-                    float((values * weights).sum() / weight_sum)
-                    if weight_sum > 0
-                    else 0.0
-                )
+                mean_value = float((values * weights).sum() / weight_sum) if weight_sum > 0 else 0.0
                 n_value = weight_sum
             else:
                 mean_value = float(values.mean()) if not values.empty else 0.0
@@ -176,13 +173,9 @@ class DataAnalysis:
             )
             if norm:
                 if norm == "index":
-                    table = table.div(
-                        table.sum(axis=1).replace({0: pd.NA}), axis=0
-                    ).fillna(0.0)
+                    table = table.div(table.sum(axis=1).replace({0: pd.NA}), axis=0).fillna(0.0)
                 elif norm == "columns":
-                    table = table.div(
-                        table.sum(axis=0).replace({0: pd.NA}), axis=1
-                    ).fillna(0.0)
+                    table = table.div(table.sum(axis=0).replace({0: pd.NA}), axis=1).fillna(0.0)
                 elif norm is True or norm == "all":
                     total = table.values.sum()
                     table = table / total if total else table * 0.0
@@ -191,9 +184,7 @@ class DataAnalysis:
                         "normalize must be one of False, 'index', 'columns', 'all', or True"
                     )
         else:
-            table = pd.crosstab(
-                self.frame[row], self.frame[col], normalize=norm, dropna=False
-            )
+            table = pd.crosstab(self.frame[row], self.frame[col], normalize=norm, dropna=False)
         if labels:
             table = self._labeled_crosstab(table, row=row, col=col)
         if not chi2 and not cramers_v and not phi:
@@ -212,9 +203,7 @@ class DataAnalysis:
             rows, cols = contingency.shape
             min_dim = min(rows - 1, cols - 1)
             stats["cramers_v"] = (
-                float((chi2_stat / (n * min_dim)) ** 0.5)
-                if n > 0 and min_dim > 0
-                else 0.0
+                float((chi2_stat / (n * min_dim)) ** 0.5) if n > 0 and min_dim > 0 else 0.0
             )
         if phi:
             rows, cols = contingency.shape
@@ -258,9 +247,7 @@ class DataAnalysis:
 
     def effective_sample_size(self) -> float:
         if self.weight_column is None:
-            raise ValueError(
-                "effective_sample_size requires SurveyData.weight to be set."
-            )
+            raise ValueError("effective_sample_size requires SurveyData.weight to be set.")
         weights = self.frame[self.weight_column].astype(float)
         sum_w = float(weights.sum())
         sum_w2 = float((weights**2).sum())
@@ -287,9 +274,7 @@ class DataAnalysis:
             )
         return pd.DataFrame(rows)
 
-    def _labeled_crosstab(
-        self, table: pd.DataFrame, row: str, col: str
-    ) -> pd.DataFrame:
+    def _labeled_crosstab(self, table: pd.DataFrame, row: str, col: str) -> pd.DataFrame:
         labeled = table.copy()
         if self.variables is not None and row in self.variables:
             row_map = self.variables[row].labels

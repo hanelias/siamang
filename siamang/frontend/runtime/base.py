@@ -28,7 +28,7 @@ class RuntimeRenderContext:
     css_href: str = "style.css"
     env_src: str = "env.js"
     survey_id: str | None = None
-    survey: "Questionnaire | None" = None
+    survey: Questionnaire | None = None
 
 
 class RuntimeAdapter(ABC):

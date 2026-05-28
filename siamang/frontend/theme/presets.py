@@ -14,7 +14,6 @@ from __future__ import annotations
 
 from siamang.frontend.theme.ui_config import UIConfig
 
-
 THEME_PRESETS: dict[str, UIConfig] = {
     # research-grade serif (the new default)
     "default": UIConfig(),

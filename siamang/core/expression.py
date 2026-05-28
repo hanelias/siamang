@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any
 
 _COMPARISON_OPS = {"=", "!=", ">", ">=", "<", "<=", "in", "not in"}
 _LOGICAL_OPS = {"and", "or", "not"}
@@ -24,11 +25,9 @@ class VarRef:
         return {"type": "var", "name": self.name}
 
     @classmethod
-    def from_dict(cls, payload: Mapping[str, Any]) -> "VarRef":
+    def from_dict(cls, payload: Mapping[str, Any]) -> VarRef:
         if payload.get("type") != "var" or not isinstance(payload.get("name"), str):
-            raise ValueError(
-                "Variable reference payload must contain type='var' and string name."
-            )
+            raise ValueError("Variable reference payload must contain type='var' and string name.")
         return cls(payload["name"])
 
     def __str__(self) -> str:
@@ -48,13 +47,13 @@ class Expression:
             object.__setattr__(self, "left", self.op)
             object.__setattr__(self, "op", "raw")
 
-    def __and__(self, other: "Expression") -> "Expression":
+    def __and__(self, other: Expression) -> Expression:
         return Expression("and", self, other)
 
-    def __or__(self, other: "Expression") -> "Expression":
+    def __or__(self, other: Expression) -> Expression:
         return Expression("or", self, other)
 
-    def __invert__(self) -> "Expression":
+    def __invert__(self) -> Expression:
         return Expression("not", self)
 
     def __str__(self) -> str:
@@ -67,9 +66,7 @@ class Expression:
         return _variables(self)
 
     def validate(self, variables: Mapping[str, Any] | set[str]) -> None:
-        known = (
-            set(variables.keys()) if isinstance(variables, Mapping) else set(variables)
-        )
+        known = set(variables.keys()) if isinstance(variables, Mapping) else set(variables)
         unknown = self.variables() - known
         if unknown:
             raise ValueError(
@@ -86,18 +83,16 @@ class Expression:
         }
 
     @classmethod
-    def from_dict(cls, payload: Mapping[str, Any]) -> "Expression":
+    def from_dict(cls, payload: Mapping[str, Any]) -> Expression:
         if payload.get("type") != "expression":
             raise ValueError("Expression payload must contain type='expression'.")
         op = payload.get("op")
         if not isinstance(op, str):
             raise ValueError("Expression payload must contain a string operator.")
-        return cls(
-            op, _from_payload(payload.get("left")), _from_payload(payload.get("right"))
-        )
+        return cls(op, _from_payload(payload.get("left")), _from_payload(payload.get("right")))
 
     @classmethod
-    def raw(cls, text: str) -> "Expression":
+    def raw(cls, text: str) -> Expression:
         return cls("raw", text)
 
     def to_surveyjs(self) -> str:
@@ -122,9 +117,7 @@ def _evaluate_node(node: Any, answers: dict[str, Any]) -> Any:
             "Raw string expressions cannot be evaluated safely. Use structured expressions."
         )
     if node.op == "and":
-        return _evaluate_node(node.left, answers) and _evaluate_node(
-            node.right, answers
-        )
+        return _evaluate_node(node.left, answers) and _evaluate_node(node.right, answers)
     if node.op == "or":
         return _evaluate_node(node.left, answers) or _evaluate_node(node.right, answers)
     if node.op == "not":

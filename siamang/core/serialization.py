@@ -52,9 +52,7 @@ def question_to_dict(question: Question) -> dict:
     if isinstance(question, OpenText):
         return {**base, "type": "comment" if question.multiline else "text"}
     if isinstance(question, Matrix):
-        columns = [
-            {"value": k, "text": v} for k, v in (question.var[0].labels or {}).items()
-        ]
+        columns = [{"value": k, "text": v} for k, v in (question.var[0].labels or {}).items()]
         rows = [{"value": v.name, "text": v.label or v.name} for v in question.var]
         return {**base, "type": "matrix", "columns": columns, "rows": rows}
     if isinstance(question, Ranking):

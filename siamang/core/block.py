@@ -11,7 +11,7 @@ from siamang.core.question import Question
 @dataclass(frozen=True, slots=True)
 class Block:
     title: str | None = None
-    items: list[Question | "Block"] = field(default_factory=list)
+    items: list[Question | Block] = field(default_factory=list)
     randomize: bool = False
     show_if: Expression | str | None = None
     hide_if: Expression | str | None = None

@@ -42,9 +42,7 @@ def compile_questionnaire(
         else dict(variable_map),
         language=opts.get("language", "en"),
         description=opts.get("description"),
-        completion_text=opts.get(
-            "completion_text", "Thank you for your participation!"
-        ),
+        completion_text=opts.get("completion_text", "Thank you for your participation!"),
         show_progress=opts.get("show_progress", True),
         allow_back=opts.get("allow_back", True),
         one_question_per_page=opts.get("one_question_per_page", False),
@@ -74,9 +72,7 @@ def _compile_page(page: Page) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "name": page.name,
         "title": page.title,
-        "elements": [
-            _compile_question(question) for question in page.flatten_questions()
-        ],
+        "elements": [_compile_question(question) for question in page.flatten_questions()],
     }
     if page.randomize_blocks:
         payload["randomizeBlocks"] = True

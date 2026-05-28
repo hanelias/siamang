@@ -8,11 +8,11 @@ package.
 
 from __future__ import annotations
 
+import contextlib
 from importlib import metadata
 from typing import Any
 
 from siamang.deploy.base import BackendAdapter, FrontendAdapter
-
 
 _BUILTIN_BACKENDS = {
     "local": "siamang.deploy.backends.local:LocalBackend",
@@ -57,17 +57,13 @@ def frontend_factory(name: str) -> type[FrontendAdapter]:
 
 def list_backends() -> list[str]:
     names = set(_BUILTIN_BACKENDS)
-    try:
+    with contextlib.suppress(Exception):  # pragma: no cover
         names.update(ep.name for ep in metadata.entry_points(group="siamang.backends"))
-    except Exception:  # pragma: no cover
-        pass
     return sorted(names)
 
 
 def list_frontends() -> list[str]:
     names = set(_BUILTIN_FRONTENDS)
-    try:
+    with contextlib.suppress(Exception):  # pragma: no cover
         names.update(ep.name for ep in metadata.entry_points(group="siamang.frontends"))
-    except Exception:  # pragma: no cover
-        pass
     return sorted(names)

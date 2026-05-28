@@ -140,9 +140,7 @@ def _pages_for_react(survey: Questionnaire):
 
 
 def _compile_page(page: Page, *, index: int, total: int) -> dict[str, Any]:
-    section = (
-        f"Section {index} of {max(0, total - 1)}" if total > 1 and index > 0 else None
-    )
+    section = f"Section {index} of {max(0, total - 1)}" if total > 1 and index > 0 else None
     if index == 0:
         section = "Welcome"
     if index == total - 1 and total > 1:
@@ -234,9 +232,7 @@ def _compile_question(question: Question) -> dict[str, Any]:
         return payload
     if isinstance(question, MultiChoice):
         if question.mode == "wide":
-            options = [
-                {"code": v.name, "label": v.label or v.name} for v in question.var
-            ]
+            options = [{"code": v.name, "label": v.label or v.name} for v in question.var]
         else:
             options = _options_payload(question.var, question.choices)
         payload = {**base, "kind": "multi", "options": options}
@@ -298,9 +294,7 @@ def _compile_question(question: Question) -> dict[str, Any]:
     return {**base, "kind": "text", "multiline": False}
 
 
-def _options_payload(
-    var: Any, choices: list[Option] | None
-) -> list[dict[str, Any]]:
+def _options_payload(var: Any, choices: list[Option] | None) -> list[dict[str, Any]]:
     if choices:
         return [_option_to_dict(opt) for opt in choices]
     variables = var if isinstance(var, list) else [var]
@@ -337,6 +331,7 @@ def _columns_from_first_var(variables: list[Any]) -> list[str]:
 
 
 # ─── Expression → JS compilation ─────────────────────────────────────────────
+
 
 def _compile_condition(condition: Any) -> dict[str, Any] | None:
     """Compile a visibility condition into a { deps, fn } payload.
@@ -459,6 +454,7 @@ def _value_to_js(value: Any) -> str | None:
 def _js_string(s: str) -> str:
     """Safely quote a string for JS (JSON-compatible quoting)."""
     import json
+
     return json.dumps(s, ensure_ascii=False)
 
 

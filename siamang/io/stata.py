@@ -107,6 +107,5 @@ def _missing_from_user_values(
 ) -> tuple[MissingValue, ...]:
     labels = labels or {}
     return tuple(
-        MissingValue(code, labels.get(code) or str(code), "system_missing")
-        for code in codes
+        MissingValue(code, labels.get(code) or str(code), "system_missing") for code in codes
     )

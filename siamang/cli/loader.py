@@ -19,9 +19,7 @@ def load_survey(path: str | Path, attribute: str = "survey") -> Any:
     if not module_path.is_file():
         raise FileNotFoundError(f"No such file: {module_path}")
 
-    spec = importlib.util.spec_from_file_location(
-        f"_siamang_user_{module_path.stem}", module_path
-    )
+    spec = importlib.util.spec_from_file_location(f"_siamang_user_{module_path.stem}", module_path)
     if spec is None or spec.loader is None:
         raise ImportError(f"Cannot import {module_path}.")
     module = importlib.util.module_from_spec(spec)

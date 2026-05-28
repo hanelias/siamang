@@ -6,8 +6,8 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from siamang.core.questionnaire import Questionnaire
 from siamang.core.expression import Expression
+from siamang.core.questionnaire import Questionnaire
 from siamang.core.variable import ValidationIssue, Variable, VariableMap
 from siamang.data.analysis import DataAnalysis
 from siamang.data.processing import DataProcessing
@@ -27,29 +27,27 @@ class SurveyData:
 
     @property
     def analysis(self) -> DataAnalysis:
-        return DataAnalysis(
-            self.frame, weight_column=self.weight, variables=self.variables
-        )
+        return DataAnalysis(self.frame, weight_column=self.weight, variables=self.variables)
 
     @property
     def tables(self) -> SurveyTables:
-        return SurveyTables(
-            self.frame, variables=self.variables, weight_column=self.weight
-        )
+        return SurveyTables(self.frame, variables=self.variables, weight_column=self.weight)
 
     @property
     def report(self):
         """Declarative table-generation accessor (FreqTable, CrossTable, GroupMeanTable)."""
         from siamang.reporting.accessors import ReportAccessor
+
         return ReportAccessor(self)
 
     @property
     def plot(self):
         """Declarative chart-generation accessor (BarChart, BoxPlot, HeatMap, ScatterPlot)."""
         from siamang.reporting.accessors import PlotAccessor
+
         return PlotAccessor(self)
 
-    def with_frame(self, frame: pd.DataFrame) -> "SurveyData":
+    def with_frame(self, frame: pd.DataFrame) -> SurveyData:
         return SurveyData(
             frame=frame,
             variables=self.variables,
@@ -57,7 +55,7 @@ class SurveyData:
             weight=self.weight,
         )
 
-    def with_weight(self, column: str) -> "SurveyData":
+    def with_weight(self, column: str) -> SurveyData:
         if column not in self.frame.columns:
             raise ValueError(f"Weight column '{column}' not found in frame.")
         return SurveyData(
@@ -69,9 +67,7 @@ class SurveyData:
 
     def codebook(self) -> pd.DataFrame:
         if self.variables is None:
-            raise ValueError(
-                "SurveyData has no variable metadata. Attach VariableMap first."
-            )
+            raise ValueError("SurveyData has no variable metadata. Attach VariableMap first.")
         rows = []
         for variable in self.variables.values():
             rows.append(
@@ -84,9 +80,7 @@ class SurveyData:
                     "description": variable.description,
                     "missing_values": list(variable.missing_values),
                     "missing_kinds": variable.missing_kinds_dict(),
-                    "missing": [
-                        item.to_dict() for item in variable.structured_missing_values()
-                    ],
+                    "missing": [item.to_dict() for item in variable.structured_missing_values()],
                     "valid_range": list(variable.valid_range)
                     if variable.valid_range is not None
                     else None,
@@ -96,9 +90,7 @@ class SurveyData:
 
     def describe_variables(self) -> pd.DataFrame:
         if self.variables is None:
-            raise ValueError(
-                "SurveyData has no variable metadata. Attach VariableMap first."
-            )
+            raise ValueError("SurveyData has no variable metadata. Attach VariableMap first.")
         rows = []
         for variable in self.variables.values():
             series = (
@@ -113,9 +105,7 @@ class SurveyData:
                     "scale": variable.scale,
                     "n": int(series.shape[0]),
                     "n_missing": int(series.isna().sum()) if series.shape[0] else 0,
-                    "n_unique": int(series.nunique(dropna=True))
-                    if series.shape[0]
-                    else 0,
+                    "n_unique": int(series.nunique(dropna=True)) if series.shape[0] else 0,
                 }
             )
         return pd.DataFrame(rows)
@@ -174,19 +164,15 @@ class SurveyData:
                 )
 
         if raise_on_error and any(issue.severity == "error" for issue in issues):
-            codes = ", ".join(
-                issue.code for issue in issues if issue.severity == "error"
-            )
+            codes = ", ".join(issue.code for issue in issues if issue.severity == "error")
             raise ValueError(f"SurveyData validation failed: {codes}")
         return issues
 
     def apply_missing_values(
         self, kinds: set[str] | list[str] | tuple[str, ...] | None = None
-    ) -> "SurveyData":
+    ) -> SurveyData:
         if self.variables is None:
-            raise ValueError(
-                "SurveyData has no variable metadata. Attach VariableMap first."
-            )
+            raise ValueError("SurveyData has no variable metadata. Attach VariableMap first.")
         selected_kinds = set(kinds) if kinds is not None else None
         frame = self.frame.copy()
         for variable in self.variables.values():
@@ -198,12 +184,10 @@ class SurveyData:
                 if selected_kinds is None or item.kind in selected_kinds
             ]
             if missing_codes:
-                frame[variable.name] = frame[variable.name].replace(
-                    missing_codes, pd.NA
-                )
+                frame[variable.name] = frame[variable.name].replace(missing_codes, pd.NA)
         return self.with_frame(frame)
 
-    def drop_missing(self, column: str) -> "SurveyData":
+    def drop_missing(self, column: str) -> SurveyData:
         frame = self.frame.copy()
         frame = frame.dropna(subset=[column])
         return self.with_frame(frame)
@@ -217,7 +201,7 @@ class SurveyData:
         labels: list[str] | None = None,
         right: bool = False,
         label: str | None = None,
-    ) -> "SurveyData":
+    ) -> SurveyData:
         if len(bins) < 2:
             raise ValueError("bins must contain at least two boundaries.")
         category_labels = labels or _bin_labels(bins)
@@ -237,9 +221,7 @@ class SurveyData:
                 into,
                 "ordinal",
                 label=label or into,
-                labels={
-                    index + 1: value for index, value in enumerate(category_labels)
-                },
+                labels={index + 1: value for index, value in enumerate(category_labels)},
                 role="derived",
             )
         )
@@ -258,7 +240,7 @@ class SurveyData:
         into: str | None = None,
         label: str | None = None,
         scale: str | None = None,
-    ) -> "SurveyData":
+    ) -> SurveyData:
         target = into or f"{column}_recoded"
         frame = self.frame.copy()
         frame[target] = frame[column].map(mapping)
@@ -292,11 +274,9 @@ class SurveyData:
         label: str | None = None,
         scale: str = "nominal",
         labels: dict[object, str] | None = None,
-    ) -> "SurveyData":
+    ) -> SurveyData:
         frame = self.frame.copy()
-        frame[name] = frame.apply(
-            lambda row: int(expression.evaluate(row.to_dict())), axis=1
-        )
+        frame[name] = frame.apply(lambda row: int(expression.evaluate(row.to_dict())), axis=1)
         variables = self._variables_with(
             Variable(
                 name,
@@ -342,7 +322,7 @@ class SurveyData:
         items: list[str],
         method: str = "mean",
         label: str | None = None,
-    ) -> "SurveyData":
+    ) -> SurveyData:
         if method != "mean":
             raise ValueError("create_index currently supports only method='mean'.")
         if not items:
@@ -367,16 +347,12 @@ class SurveyData:
         )
 
     def _numeric_items_frame(self, items: list[str]) -> pd.DataFrame:
-        missing_normalized = (
-            self.apply_missing_values() if self.variables is not None else self
-        )
+        missing_normalized = self.apply_missing_values() if self.variables is not None else self
         return missing_normalized.frame[items].apply(pd.to_numeric, errors="coerce")
 
     def export_dictionary(self, path: str = "survey_dictionary.json"):
         if self.variables is None:
-            raise ValueError(
-                "SurveyData has no variable metadata. Attach VariableMap first."
-            )
+            raise ValueError("SurveyData has no variable metadata. Attach VariableMap first.")
         from siamang.io.dictionary import DictionaryWriter
 
         return DictionaryWriter().write(self.variables, path)
@@ -385,30 +361,35 @@ class SurveyData:
         fmt = fmt.lower()
         if fmt == "csv":
             from pathlib import Path
+
             from siamang.io.csv import CSVWriter
 
             output = Path(path or "survey_data.csv")
             return CSVWriter().write(self, output, **kwargs)
         if fmt in {"xlsx", "excel"}:
             from pathlib import Path
+
             from siamang.io.excel import ExcelWriter
 
             output = Path(path or "survey_data.xlsx")
             return ExcelWriter().write(self, output, **kwargs)
         if fmt == "r":
             from pathlib import Path
+
             from siamang.io.r import RScriptWriter
 
             output = Path(path or "survey_r_export")
             return RScriptWriter().write(self, output)
         if fmt in {"spss", "sav"}:
             from pathlib import Path
+
             from siamang.io.spss import SPSSWriter
 
             output = Path(path or "survey_data.sav")
             return SPSSWriter().write(self, output, **kwargs)
         if fmt in {"stata", "dta"}:
             from pathlib import Path
+
             from siamang.io.stata import StataWriter
 
             output = Path(path or "survey_data.dta")
@@ -418,6 +399,6 @@ class SurveyData:
 
 def _bin_labels(bins: list[int | float]) -> list[str]:
     labels: list[str] = []
-    for start, end in zip(bins[:-1], bins[1:]):
+    for start, end in zip(bins[:-1], bins[1:], strict=True):
         labels.append(f"{start}-{end}")
     return labels

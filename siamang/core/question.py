@@ -40,9 +40,7 @@ class Question:
             items = self.media if isinstance(self.media, list) else [self.media]
             for item in items:
                 if not isinstance(item, Media):
-                    raise TypeError(
-                        "Question.media must be Media or list[Media]."
-                    )
+                    raise TypeError("Question.media must be Media or list[Media].")
 
 
 @dataclass(frozen=True, slots=True)
@@ -94,15 +92,11 @@ class MultiChoice(Question):
     ) -> None:
         if vars is not None:
             if var is not None:
-                raise ValueError(
-                    "Use either 'var' or 'vars' for MultiChoice, not both."
-                )
+                raise ValueError("Use either 'var' or 'vars' for MultiChoice, not both.")
             var = vars
             mode = "wide"
         if var is None:
-            raise TypeError(
-                "MultiChoice requires 'var' for array mode or 'vars' for wide mode."
-            )
+            raise TypeError("MultiChoice requires 'var' for array mode or 'vars' for wide mode.")
         object.__setattr__(self, "text", text)
         object.__setattr__(self, "var", var)
         object.__setattr__(self, "required", required)
@@ -128,18 +122,14 @@ class MultiChoice(Question):
         Question.__post_init__(self)
         if self.mode not in {"array", "wide"}:
             raise ValueError("MultiChoice mode must be either 'array' or 'wide'.")
-        if self.mode == "array":
-            if not isinstance(self.var, Variable):
-                raise TypeError("MultiChoice array mode expects var to be a Variable.")
-        if self.mode == "wide":
-            if not isinstance(self.var, list) or not self.var:
-                raise TypeError(
-                    "MultiChoice wide mode expects vars to be a non-empty list of Variables."
-                )
-            if any(not isinstance(v, Variable) for v in self.var):
-                raise TypeError(
-                    "MultiChoice wide mode vars must contain only Variable instances."
-                )
+        if self.mode == "array" and not isinstance(self.var, Variable):
+            raise TypeError("MultiChoice array mode expects var to be a Variable.")
+        if self.mode == "wide" and (not isinstance(self.var, list) or not self.var):
+            raise TypeError(
+                "MultiChoice wide mode expects vars to be a non-empty list of Variables."
+            )
+        if self.mode == "wide" and self.var and any(not isinstance(v, Variable) for v in self.var):
+            raise TypeError("MultiChoice wide mode vars must contain only Variable instances.")
         if self.min_answers < 0:
             raise ValueError("min_answers must be >= 0")
         if self.max_answers is not None and self.max_answers < self.min_answers:
@@ -239,9 +229,7 @@ def _validate_choices(choices: list[Option] | None) -> None:
         if not isinstance(choice, Option):
             raise TypeError("All entries in choices must be Option instances.")
         if choice.code in seen:
-            raise ValueError(
-                f"Duplicate option code in choices: {choice.code!r}."
-            )
+            raise ValueError(f"Duplicate option code in choices: {choice.code!r}.")
         seen.add(choice.code)
 
 

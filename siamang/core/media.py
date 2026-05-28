@@ -7,10 +7,23 @@ from typing import Any
 
 _VALID_KINDS = {"image", "video", "audio"}
 _EXT_TO_KIND = {
-    "jpg": "image", "jpeg": "image", "png": "image", "gif": "image",
-    "webp": "image", "svg": "image", "avif": "image",
-    "mp4": "video", "webm": "video", "mov": "video", "m4v": "video", "ogv": "video",
-    "mp3": "audio", "wav": "audio", "ogg": "audio", "m4a": "audio", "flac": "audio",
+    "jpg": "image",
+    "jpeg": "image",
+    "png": "image",
+    "gif": "image",
+    "webp": "image",
+    "svg": "image",
+    "avif": "image",
+    "mp4": "video",
+    "webm": "video",
+    "mov": "video",
+    "m4v": "video",
+    "ogv": "video",
+    "mp3": "audio",
+    "wav": "audio",
+    "ogg": "audio",
+    "m4a": "audio",
+    "flac": "audio",
 }
 
 
@@ -41,9 +54,7 @@ class Media:
                 f"Specify kind explicitly: one of {sorted(_VALID_KINDS)}."
             )
         if kind not in _VALID_KINDS:
-            raise ValueError(
-                f"Unknown media kind {self.kind!r}. Allowed: {sorted(_VALID_KINDS)}."
-            )
+            raise ValueError(f"Unknown media kind {self.kind!r}. Allowed: {sorted(_VALID_KINDS)}.")
         object.__setattr__(self, "kind", kind)
 
     def to_dict(self) -> dict[str, Any]:
@@ -61,7 +72,7 @@ class Media:
         return payload
 
     @classmethod
-    def from_dict(cls, payload: dict[str, Any]) -> "Media":
+    def from_dict(cls, payload: dict[str, Any]) -> Media:
         return cls(
             url=payload["url"],
             kind=payload.get("kind"),
@@ -78,5 +89,5 @@ def _infer_kind(url: str) -> str | None:
     dot = path.rfind(".")
     if dot < 0:
         return None
-    ext = path[dot + 1:].lower()
+    ext = path[dot + 1 :].lower()
     return _EXT_TO_KIND.get(ext)

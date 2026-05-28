@@ -81,9 +81,7 @@ def build_app(bundle: "SurveyBundle", backend: "LocalBackend", survey_id: str):
 
     @app.get("/env.js")
     def env_js() -> Any:
-        return PlainTextResponse(
-            bundle.files[_env_key], media_type="application/javascript"
-        )
+        return PlainTextResponse(bundle.files[_env_key], media_type="application/javascript")
 
     @app.get("/closed.html", response_class=HTMLResponse)
     def closed() -> Any:
@@ -91,9 +89,7 @@ def build_app(bundle: "SurveyBundle", backend: "LocalBackend", survey_id: str):
 
     @app.get("/manifest.json")
     def manifest() -> Any:
-        return Response(
-            content=bundle.files[_manifest_key], media_type="application/json"
-        )
+        return Response(content=bundle.files[_manifest_key], media_type="application/json")
 
     # Generic fallback for any other static asset in the bundle (e.g. JSX files
     # shipped by ReactRuntime). Resolved by filename match; mime type is
@@ -125,9 +121,12 @@ def build_app(bundle: "SurveyBundle", backend: "LocalBackend", survey_id: str):
     def static_asset(name: str) -> Any:
         # Allow nested paths (e.g. ``vendor/react.production.min.js``)
         # but reject absolute paths or ``..`` traversal attempts.
-        if (name and name in bundle.files
-                and not name.startswith("/")
-                and ".." not in name.split("/")):
+        if (
+            name
+            and name in bundle.files
+            and not name.startswith("/")
+            and ".." not in name.split("/")
+        ):
             content = bundle.files[name]
             ext = "." + name.rsplit(".", 1)[-1] if "." in name else ""
             mime = _MEDIA.get(ext, "application/octet-stream")
@@ -179,9 +178,7 @@ class LocalServer:
         if self.port == 0:
             self.port = _pick_free_port()
 
-        config = uvicorn.Config(
-            self.app, host=self.host, port=self.port, log_level="warning"
-        )
+        config = uvicorn.Config(self.app, host=self.host, port=self.port, log_level="warning")
         self._server = uvicorn.Server(config)
         self._thread = threading.Thread(target=self._server.run, daemon=True)
         self._thread.start()
@@ -228,9 +225,7 @@ class LocalFrontend(FrontendAdapter):
 
         backend = config.internal.get("backend_ref")
         if backend is None:
-            backend = LocalBackend(
-                path=Path(config.internal.get("db_path", "survey.db"))
-            )
+            backend = LocalBackend(path=Path(config.internal.get("db_path", "survey.db")))
         app = build_app(bundle, backend, config.survey_id)
         server = LocalServer(app=app, host=self.host, port=self.port)
         url = server.start()

@@ -13,7 +13,5 @@ class Quota:
     limit: int
 
     def reached(self, answers: list[dict[str, Any]]) -> bool:
-        matched = sum(
-            1 for row in answers if row.get(self.variable) == self.target_value
-        )
+        matched = sum(1 for row in answers if row.get(self.variable) == self.target_value)
         return matched >= self.limit

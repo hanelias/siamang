@@ -40,9 +40,7 @@ class MissingValue:
         normalized_kind = self.kind.lower().strip()
         if normalized_kind not in _VALID_MISSING_KINDS:
             allowed = ", ".join(sorted(_VALID_MISSING_KINDS))
-            raise ValueError(
-                f"Unknown missing value kind '{self.kind}'. Allowed kinds: {allowed}."
-            )
+            raise ValueError(f"Unknown missing value kind '{self.kind}'. Allowed kinds: {allowed}.")
         if not self.label:
             raise ValueError("MissingValue label must not be empty.")
         object.__setattr__(self, "kind", normalized_kind)
@@ -51,7 +49,7 @@ class MissingValue:
         return {"code": self.code, "label": self.label, "kind": self.kind}
 
     @classmethod
-    def from_dict(cls, payload: dict[str, Any]) -> "MissingValue":
+    def from_dict(cls, payload: dict[str, Any]) -> MissingValue:
         return cls(
             code=payload["code"],
             label=payload.get("label") or str(payload["code"]),
@@ -84,9 +82,7 @@ class Variable:
         normalized_scale = self.scale.lower().strip()
         if normalized_scale not in _VALID_SCALES:
             allowed = ", ".join(sorted(_VALID_SCALES))
-            raise ValueError(
-                f"Unknown scale '{self.scale}'. Allowed scales: {allowed}."
-            )
+            raise ValueError(f"Unknown scale '{self.scale}'. Allowed scales: {allowed}.")
 
         object.__setattr__(self, "scale", normalized_scale)
         explicit_missing = tuple(_coerce_missing_value(item) for item in self.missing)
@@ -106,9 +102,7 @@ class Variable:
             explicit_missing, legacy_missing_values, self.missing_labels
         )
         object.__setattr__(self, "missing", normalized_missing)
-        object.__setattr__(
-            self, "missing_values", tuple(item.code for item in normalized_missing)
-        )
+        object.__setattr__(self, "missing_values", tuple(item.code for item in normalized_missing))
         merged_missing_labels = dict(self.missing_labels)
         for item in explicit_missing:
             merged_missing_labels.setdefault(item.code, item.label)
@@ -117,27 +111,19 @@ class Variable:
             normalized_dtype = self.dtype.lower().strip()
             if normalized_dtype not in _VALID_DTYPES:
                 allowed = ", ".join(sorted(_VALID_DTYPES))
-                raise ValueError(
-                    f"Unknown dtype '{self.dtype}'. Allowed dtypes: {allowed}."
-                )
+                raise ValueError(f"Unknown dtype '{self.dtype}'. Allowed dtypes: {allowed}.")
             object.__setattr__(self, "dtype", normalized_dtype)
         if self.role is not None:
             normalized_role = self.role.lower().strip()
             if normalized_role not in _VALID_ROLES:
                 allowed = ", ".join(sorted(_VALID_ROLES))
-                raise ValueError(
-                    f"Unknown role '{self.role}'. Allowed roles: {allowed}."
-                )
+                raise ValueError(f"Unknown role '{self.role}'. Allowed roles: {allowed}.")
             object.__setattr__(self, "role", normalized_role)
         if self.valid_range is not None and len(self.valid_range) != 2:
             raise ValueError("valid_range must be a 2-item tuple (min, max).")
         if self.valid_range is not None:
             min_value, max_value = self.valid_range
-            if (
-                min_value is not None
-                and max_value is not None
-                and min_value > max_value
-            ):
+            if min_value is not None and max_value is not None and min_value > max_value:
                 raise ValueError("valid_range must be ordered as (min, max).")
             object.__setattr__(self, "valid_range", tuple(self.valid_range))
 
@@ -266,9 +252,7 @@ class VariableMap(dict[str, Variable]):
                 continue
             series = frame[variable.name]
             non_missing = series.dropna()
-            analytic_values = _drop_configured_missing(
-                non_missing, variable.missing_values
-            )
+            analytic_values = _drop_configured_missing(non_missing, variable.missing_values)
 
             issues.extend(_dtype_issues(variable, analytic_values))
             issues.extend(_range_issues(variable, analytic_values))
@@ -277,9 +261,7 @@ class VariableMap(dict[str, Variable]):
             issues.extend(_role_issues(variable, series))
 
         if raise_on_error and any(issue.severity == "error" for issue in issues):
-            codes = ", ".join(
-                issue.code for issue in issues if issue.severity == "error"
-            )
+            codes = ", ".join(issue.code for issue in issues if issue.severity == "error")
             raise ValueError(f"DataFrame validation failed: {codes}")
         return issues
 
@@ -300,15 +282,13 @@ class VariableMap(dict[str, Variable]):
                 if variable.valid_range is not None
                 else None,
                 "missing_labels": dict(variable.missing_labels),
-                "missing": [
-                    item.to_dict() for item in variable.structured_missing_values()
-                ],
+                "missing": [item.to_dict() for item in variable.structured_missing_values()],
             }
             for name, variable in self.items()
         }
 
     @classmethod
-    def from_dict(cls, payload: dict[str, dict[str, Any]]) -> "VariableMap":
+    def from_dict(cls, payload: dict[str, dict[str, Any]]) -> VariableMap:
         def _normalize_key(key: Any) -> Any:
             if isinstance(key, str):
                 try:
@@ -340,9 +320,7 @@ class VariableMap(dict[str, Variable]):
                     valid_range=tuple(item["valid_range"])
                     if item.get("valid_range") is not None
                     else None,
-                    missing_labels=_normalize_mapping_keys(
-                        item.get("missing_labels", {})
-                    ),
+                    missing_labels=_normalize_mapping_keys(item.get("missing_labels", {})),
                     missing=tuple(
                         MissingValue.from_dict(missing_item)
                         for missing_item in item.get("missing", [])
@@ -352,17 +330,13 @@ class VariableMap(dict[str, Variable]):
         return variable_map
 
 
-def _drop_configured_missing(
-    values: pd.Series, missing_values: tuple[Any, ...]
-) -> pd.Series:
+def _drop_configured_missing(values: pd.Series, missing_values: tuple[Any, ...]) -> pd.Series:
     configured_missing = set(missing_values)
     if not configured_missing or values.empty:
         return values
     missing_mask = values.map(
         lambda value: (
-            False
-            if isinstance(value, list | tuple | set)
-            else value in configured_missing
+            False if isinstance(value, list | tuple | set) else value in configured_missing
         )
     )
     return values[~missing_mask]
@@ -411,9 +385,7 @@ def _dtype_issues(variable: Variable, values: pd.Series) -> list[ValidationIssue
         if valid and variable.dtype == "int":
             valid = bool((values % 1 == 0).all())
     elif variable.dtype == "bool":
-        valid = (
-            pd.api.types.is_bool_dtype(values) or values.isin([True, False, 0, 1]).all()
-        )
+        valid = pd.api.types.is_bool_dtype(values) or values.isin([True, False, 0, 1]).all()
     elif variable.dtype in {"str", "category"}:
         valid = (
             pd.api.types.is_string_dtype(values)
@@ -459,11 +431,7 @@ def _range_issues(variable: Variable, values: pd.Series) -> list[ValidationIssue
 
 
 def _label_issues(variable: Variable, values: pd.Series) -> list[ValidationIssue]:
-    if (
-        variable.scale not in {"nominal", "ordinal"}
-        or not variable.labels
-        or values.empty
-    ):
+    if variable.scale not in {"nominal", "ordinal"} or not variable.labels or values.empty:
         return []
     observed = set(_flatten_observed_values(values))
     invalid = observed - set(variable.labels)

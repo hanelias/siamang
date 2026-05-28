@@ -31,22 +31,13 @@ from siamang.core import (
     Script,
     SingleChoice,
     ValidationIssue,
-    VarRef,
     Variable,
     VariableMap,
+    VarRef,
     compare,
 )
 from siamang.data import BannerTable, SurveyData, SurveyTables
 from siamang.deploy import DeployResult
-from siamang.reporting import (
-    BarChart,
-    BoxPlot,
-    CrossTable,
-    FreqTable,
-    GroupMeanTable,
-    HeatMap,
-    ScatterPlot,
-)
 from siamang.frontend.theme import UIConfig, get_preset
 from siamang.io import (
     CSVReader,
@@ -63,6 +54,15 @@ from siamang.io import (
     SurveyDataReader,
     read_spss,
     read_stata,
+)
+from siamang.reporting import (
+    BarChart,
+    BoxPlot,
+    CrossTable,
+    FreqTable,
+    GroupMeanTable,
+    HeatMap,
+    ScatterPlot,
 )
 
 __all__ = [

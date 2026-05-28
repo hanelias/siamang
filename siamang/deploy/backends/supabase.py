@@ -7,7 +7,7 @@ import json
 import os
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from siamang.deploy.backend_config import BackendConfig
@@ -116,8 +116,7 @@ def _default_session() -> Any:
         import requests
     except ImportError as exc:  # pragma: no cover
         raise ImportError(
-            "requests is required for the Supabase backend. "
-            "Install with: pip install requests"
+            "requests is required for the Supabase backend. Install with: pip install requests"
         ) from exc
     return requests.Session()
 
@@ -150,7 +149,7 @@ def generate_migration_sql(
     """
     parts = [
         "-- Siamang: Supabase migration script",
-        f"-- Generated: {datetime.now(timezone.utc).isoformat()}",
+        f"-- Generated: {datetime.now(UTC).isoformat()}",
         "-- Run this in Supabase Dashboard → SQL Editor",
         "",
         "-- 1. Responses table",
@@ -173,12 +172,14 @@ def generate_migration_sql(
         # Escape single quotes for safe SQL string literals
         safe_id = survey_id.replace("'", "''")
         safe_title = title.replace("'", "''")
-        parts.extend([
-            "",
-            "-- 6. Register this survey",
-            f"INSERT INTO survey_meta (survey_id, title) "
-            f"VALUES ('{safe_id}', '{safe_title}') ON CONFLICT (survey_id) DO NOTHING;",
-        ])
+        parts.extend(
+            [
+                "",
+                "-- 6. Register this survey",
+                f"INSERT INTO survey_meta (survey_id, title) "
+                f"VALUES ('{safe_id}', '{safe_title}') ON CONFLICT (survey_id) DO NOTHING;",
+            ]
+        )
 
     parts.append("")
     return "\n".join(parts)
@@ -214,9 +215,7 @@ class SupabaseBackend(BackendAdapter):
     session: Any = field(default=None, repr=False)
 
     def __post_init__(self) -> None:
-        self.url = self.url or _get_env(
-            "SIAMANG_SUPABASE_URL", "SURVLIB_SUPABASE_URL"
-        )
+        self.url = self.url or _get_env("SIAMANG_SUPABASE_URL", "SURVLIB_SUPABASE_URL")
         self.anon_key = self.anon_key or _get_env(
             "SIAMANG_SUPABASE_ANON_KEY", "SURVLIB_SUPABASE_ANON_KEY"
         )
@@ -327,14 +326,12 @@ class SupabaseBackend(BackendAdapter):
 
         return True
 
-    def _extract_variables(self, schema: "SurveySchema") -> list[dict[str, Any]]:
+    def _extract_variables(self, schema: SurveySchema) -> list[dict[str, Any]]:
         """Extract variable definitions from survey schema for migration tracking."""
         data = schema.to_dict()
         return data.get("variables", [])
 
-    def provision(
-        self, schema: "SurveySchema", migration_dir: str | None = None
-    ) -> BackendConfig:
+    def provision(self, schema: SurveySchema, migration_dir: str | None = None) -> BackendConfig:
         """Create/update Supabase tables with migration tracking and RLS.
 
         Creates a shared ``responses`` table (if not exists), registers the
@@ -369,13 +366,11 @@ class SupabaseBackend(BackendAdapter):
             migrations = Path(migration_dir)
             migrations.mkdir(parents=True, exist_ok=True)
 
-            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+            timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
             migration_sql = generate_migration_sql(
                 survey_id=survey_id, title=schema.title or "Untitled"
             )
-            (migrations / f"{timestamp}_provision_{survey_id}.sql").write_text(
-                migration_sql
-            )
+            (migrations / f"{timestamp}_provision_{survey_id}.sql").write_text(migration_sql)
 
         # Auto-provision: create tables via exec_sql RPC
         if self.auto_provision:
@@ -441,7 +436,7 @@ class SupabaseBackend(BackendAdapter):
         *,
         limit: int = 1000,
         offset: int = 0,
-    ) -> "pd.DataFrame":
+    ) -> pd.DataFrame:
         """Fetch responses for a specific survey from the shared table."""
         import pandas as pd
 
@@ -452,9 +447,7 @@ class SupabaseBackend(BackendAdapter):
             "offset": str(offset),
             "order": "created_at.desc",
         }
-        response = self.session.get(
-            self._table_url(), headers=self._admin_headers(), params=params
-        )
+        response = self.session.get(self._table_url(), headers=self._admin_headers(), params=params)
         response.raise_for_status()
         rows = response.json()
         if not rows:
@@ -471,9 +464,7 @@ class SupabaseBackend(BackendAdapter):
 
         return pd.json_normalize(processed)
 
-    def get_all_responses(
-        self, survey_id: str, page_size: int = 1000
-    ) -> "pd.DataFrame":
+    def get_all_responses(self, survey_id: str, page_size: int = 1000) -> pd.DataFrame:
         """Fetch all responses with pagination."""
         import pandas as pd
 
@@ -501,9 +492,7 @@ class SupabaseBackend(BackendAdapter):
             "value": f"eq.{json.dumps(value)}",
             "select": "target,current",
         }
-        response = self.session.get(
-            quota_url, headers=self._admin_headers(), params=params
-        )
+        response = self.session.get(quota_url, headers=self._admin_headers(), params=params)
         response.raise_for_status()
         rows = response.json()
         if not rows:

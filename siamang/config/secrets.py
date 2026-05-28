@@ -6,7 +6,6 @@ import logging
 import os
 from pathlib import Path
 
-
 _logger = logging.getLogger("siamang.config")
 
 

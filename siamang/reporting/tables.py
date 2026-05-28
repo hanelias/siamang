@@ -19,21 +19,21 @@ if TYPE_CHECKING:
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 
 
-def _get_label(data: "SurveyData", var_name: str) -> str:
+def _get_label(data: SurveyData, var_name: str) -> str:
     """Get the human-readable label for a variable, falling back to the name."""
     if data.variables and var_name in data.variables:
         return data.variables[var_name].label or var_name
     return var_name
 
 
-def _get_value_labels(data: "SurveyData", var_name: str) -> dict[Any, str]:
+def _get_value_labels(data: SurveyData, var_name: str) -> dict[Any, str]:
     """Get value labels for a variable."""
     if data.variables and var_name in data.variables:
         return data.variables[var_name].labels or {}
     return {}
 
 
-def _get_scale(data: "SurveyData", var_name: str) -> str | None:
+def _get_scale(data: SurveyData, var_name: str) -> str | None:
     """Get measurement scale for a variable."""
     if data.variables and var_name in data.variables:
         return data.variables[var_name].scale
@@ -66,7 +66,7 @@ def _frame_to_html(df: pd.DataFrame, caption: str | None = None) -> str:
 class SurveyTable:
     """Base class for all declarative table components."""
 
-    data: "SurveyData"
+    data: SurveyData
     _result: pd.DataFrame = field(init=False, repr=False, default=None)
     _stats: dict[str, Any] = field(init=False, repr=False, default_factory=dict)
 
@@ -182,13 +182,17 @@ class FreqTable(SurveyTable):
         df["Cumulative %"] = df["%"].cumsum().round(1) if not df.empty else 0.0
 
         # Append total row
-        total_row = pd.DataFrame([{
-            "Value": "",
-            "Label": "Total",
-            "N": total,
-            "%": 100.0,
-            "Cumulative %": 100.0,
-        }])
+        total_row = pd.DataFrame(
+            [
+                {
+                    "Value": "",
+                    "Label": "Total",
+                    "N": total,
+                    "%": 100.0,
+                    "Cumulative %": 100.0,
+                }
+            ]
+        )
         df = pd.concat([df, total_row], ignore_index=True)
 
         self._result = df
@@ -269,11 +273,7 @@ class CrossTable(SurveyTable):
                 chi2_stat, p_value, dof, _ = chi2_contingency(contingency.values)
                 n = contingency.values.sum()
                 min_dim = min(contingency.shape[0] - 1, contingency.shape[1] - 1)
-                cramers_v = (
-                    (chi2_stat / (n * min_dim)) ** 0.5
-                    if n > 0 and min_dim > 0
-                    else 0.0
-                )
+                cramers_v = (chi2_stat / (n * min_dim)) ** 0.5 if n > 0 and min_dim > 0 else 0.0
                 self._stats = {
                     "χ²": round(chi2_stat, 3),
                     "df": int(dof),

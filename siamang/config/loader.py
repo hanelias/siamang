@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import tomllib
 from dataclasses import dataclass, field
@@ -30,16 +31,12 @@ class Config:
 
     def backend(self, name: str) -> dict[str, Any]:
         if name not in self.backends:
-            raise ConfigError(
-                f"Backend '{name}' is not configured. Run `siamang init`."
-            )
+            raise ConfigError(f"Backend '{name}' is not configured. Run `siamang init`.")
         return dict(self.backends[name])
 
     def frontend(self, name: str) -> dict[str, Any]:
         if name not in self.frontends:
-            raise ConfigError(
-                f"Frontend '{name}' is not configured. Run `siamang init`."
-            )
+            raise ConfigError(f"Frontend '{name}' is not configured. Run `siamang init`.")
         return dict(self.frontends[name])
 
     def default_backend(self) -> str:
@@ -48,7 +45,7 @@ class Config:
     def default_frontend(self) -> str:
         return self.defaults.get("frontend", "local")
 
-    def with_profile(self, name: str) -> "Config":
+    def with_profile(self, name: str) -> Config:
         if name not in self.profiles:
             raise ConfigError(f"Profile '{name}' is not defined.")
         profile = self.profiles[name]
@@ -108,13 +105,8 @@ def save(config: Config, path: str | Path | None = None) -> Path:
     destination = Path(os.path.expanduser(str(path or config.path or DEFAULT_PATH)))
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(config.to_toml(), encoding="utf-8")
-    try:
+    with contextlib.suppress(PermissionError, OSError):  # pragma: no cover
         destination.chmod(0o600)
-    except (
-        PermissionError,
-        OSError,
-    ):  # pragma: no cover - Windows / fs without unix perms
-        pass
     return destination
 
 
@@ -131,9 +123,7 @@ def _config_from_dict(data: dict[str, Any], path: Path | None) -> Config:
 def _namespace(payload: Any) -> dict[str, dict[str, Any]]:
     if not isinstance(payload, dict):
         return {}
-    return {
-        name: dict(value) for name, value in payload.items() if isinstance(value, dict)
-    }
+    return {name: dict(value) for name, value in payload.items() if isinstance(value, dict)}
 
 
 # New canonical prefix + legacy fallback (SURVLIB_* still works)

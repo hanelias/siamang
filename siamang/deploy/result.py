@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -25,12 +25,12 @@ class DeployResult:
     frontend: str
     survey_id: str = ""
     dashboard: str | None = None
-    deployed_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    backend_ref: "BackendAdapter | None" = None
-    frontend_ref: "FrontendAdapter | None" = None
+    deployed_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    backend_ref: BackendAdapter | None = None
+    frontend_ref: FrontendAdapter | None = None
     extras: dict[str, Any] = field(default_factory=dict)
 
-    def collect(self) -> "pd.DataFrame":
+    def collect(self) -> pd.DataFrame:
         if self.backend_ref is None:
             raise RuntimeError("DeployResult has no backend adapter; cannot collect().")
         return self.backend_ref.get_responses(self.survey_id)

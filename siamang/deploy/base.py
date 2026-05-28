@@ -23,11 +23,11 @@ class BackendAdapter(ABC):
     name: str
 
     @abstractmethod
-    def provision(self, schema: "SurveySchema") -> "BackendConfig":
+    def provision(self, schema: SurveySchema) -> BackendConfig:
         """Create data-store structures and return a frontend-safe config."""
 
     @abstractmethod
-    def get_responses(self, survey_id: str) -> "pd.DataFrame":
+    def get_responses(self, survey_id: str) -> pd.DataFrame:
         """Fetch accumulated responses as a DataFrame."""
 
     @abstractmethod
@@ -41,5 +41,5 @@ class FrontendAdapter(ABC):
     name: str
 
     @abstractmethod
-    def publish(self, bundle: "SurveyBundle", config: "BackendConfig") -> str:
+    def publish(self, bundle: SurveyBundle, config: BackendConfig) -> str:
         """Upload/serve the bundle and return its public URL."""

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-from typing import Sequence
+from collections.abc import Sequence
 
 
 def _add_validate(subparsers: argparse._SubParsersAction) -> None:
@@ -43,9 +43,7 @@ def _add_init(subparsers: argparse._SubParsersAction) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="siamang", description="siamang command-line interface"
-    )
+    parser = argparse.ArgumentParser(prog="siamang", description="siamang command-line interface")
     sub = parser.add_subparsers(dest="command", required=True)
     _add_validate(sub)
     _add_preview(sub)

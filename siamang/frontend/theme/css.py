@@ -18,7 +18,6 @@ from __future__ import annotations
 
 from siamang.frontend.theme.ui_config import UIConfig
 
-
 _DENSITY_SPACING = {
     "compact": ("18px", "10px", "8px", "24px"),
     "comfortable": ("28px", "14px", "12px", "36px"),

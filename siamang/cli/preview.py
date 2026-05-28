@@ -14,8 +14,10 @@ def _report_build_path() -> None:
     browser) compile route is in use."""
     has_node = shutil.which("npx") is not None
     if not has_node:
-        print("  [react] no `npx` on PATH — bundle falls back to "
-              "@babel/standalone in browser (slow first paint)")
+        print(
+            "  [react] no `npx` on PATH — bundle falls back to "
+            "@babel/standalone in browser (slow first paint)"
+        )
         return
 
     def _probe(cmd: list[str]) -> bool:
@@ -30,11 +32,15 @@ def _report_build_path() -> None:
     if has_sucrase and has_esbuild:
         print("  [react] sucrase + esbuild minify available — fast path")
     elif has_sucrase:
-        print("  [react] sucrase available, esbuild not — `npm install -g esbuild` "
-              "shrinks the bundle ~40%")
+        print(
+            "  [react] sucrase available, esbuild not — `npm install -g esbuild` "
+            "shrinks the bundle ~40%"
+        )
     else:
-        print("  [react] sucrase not found — `npm install -g sucrase esbuild` "
-              "for the fast compile path (current path: @babel/standalone in browser)")
+        print(
+            "  [react] sucrase not found — `npm install -g sucrase esbuild` "
+            "for the fast compile path (current path: @babel/standalone in browser)"
+        )
 
 
 def run(

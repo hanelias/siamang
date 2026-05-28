@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from siamang.deploy.base import BackendAdapter, FrontendAdapter
@@ -49,7 +49,7 @@ class DeployPipeline:
 
     def run(
         self,
-        survey: "Questionnaire",
+        survey: Questionnaire,
         *,
         options: dict[str, Any] | None = None,
     ) -> DeployResult:
@@ -73,7 +73,7 @@ class DeployPipeline:
             frontend=self.frontend.name,
             survey_id=backend_config.survey_id,
             dashboard=backend_config.dashboard_url,
-            deployed_at=datetime.now(timezone.utc),
+            deployed_at=datetime.now(UTC),
             backend_ref=self.backend,
             frontend_ref=self.frontend,
         )

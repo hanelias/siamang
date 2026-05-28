@@ -17,8 +17,8 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from siamang.data.survey_data import SurveyData
-    from siamang.reporting.tables import FreqTable, CrossTable, GroupMeanTable
     from siamang.reporting.charts import BarChart, BoxPlot, HeatMap, ScatterPlot
+    from siamang.reporting.tables import CrossTable, FreqTable, GroupMeanTable
 
 
 class ReportAccessor:
@@ -29,10 +29,10 @@ class ReportAccessor:
         print(table.to_markdown())
     """
 
-    def __init__(self, data: "SurveyData") -> None:
+    def __init__(self, data: SurveyData) -> None:
         self._data = data
 
-    def freq(self, column: str, *, exclude_missing: bool = True, sort: str = "value") -> "FreqTable":
+    def freq(self, column: str, *, exclude_missing: bool = True, sort: str = "value") -> FreqTable:
         """Generate a frequency distribution table.
 
         Parameters
@@ -55,7 +55,7 @@ class ReportAccessor:
         *,
         pct: str = "none",
         test: bool = True,
-    ) -> "CrossTable":
+    ) -> CrossTable:
         """Generate a cross-tabulation table.
 
         Parameters
@@ -79,7 +79,7 @@ class ReportAccessor:
         *,
         by: str,
         test: bool = True,
-    ) -> "GroupMeanTable":
+    ) -> GroupMeanTable:
         """Generate a grouped means comparison table.
 
         Parameters
@@ -104,7 +104,7 @@ class PlotAccessor:
         data.plot.boxplot("autonomy", by="remote_freq")
     """
 
-    def __init__(self, data: "SurveyData") -> None:
+    def __init__(self, data: SurveyData) -> None:
         self._data = data
 
     def bar(
@@ -117,7 +117,7 @@ class PlotAccessor:
         figsize: tuple[float, float] = (10, 6),
         palette: str = "muted",
         title: str | None = None,
-    ) -> "BarChart":
+    ) -> BarChart:
         """Create a bar chart.
 
         Parameters
@@ -134,9 +134,14 @@ class PlotAccessor:
         from siamang.reporting.charts import BarChart
 
         return BarChart(
-            data=self._data, column=column, by=by,
-            horizontal=horizontal, show_values=show_values,
-            figsize=figsize, palette=palette, title=title,
+            data=self._data,
+            column=column,
+            by=by,
+            horizontal=horizontal,
+            show_values=show_values,
+            figsize=figsize,
+            palette=palette,
+            title=title,
         )
 
     def boxplot(
@@ -148,7 +153,7 @@ class PlotAccessor:
         figsize: tuple[float, float] = (10, 6),
         palette: str = "muted",
         title: str | None = None,
-    ) -> "BoxPlot":
+    ) -> BoxPlot:
         """Create a box plot comparing distributions across groups.
 
         Parameters
@@ -163,9 +168,13 @@ class PlotAccessor:
         from siamang.reporting.charts import BoxPlot
 
         return BoxPlot(
-            data=self._data, column=column, by=by,
+            data=self._data,
+            column=column,
+            by=by,
             show_points=show_points,
-            figsize=figsize, palette=palette, title=title,
+            figsize=figsize,
+            palette=palette,
+            title=title,
         )
 
     def heatmap(
@@ -179,7 +188,7 @@ class PlotAccessor:
         vmax: float | None = None,
         figsize: tuple[float, float] = (10, 6),
         title: str | None = None,
-    ) -> "HeatMap":
+    ) -> HeatMap:
         """Create a heatmap.
 
         Parameters
@@ -192,9 +201,15 @@ class PlotAccessor:
         from siamang.reporting.charts import HeatMap
 
         return HeatMap(
-            data=self._data, columns=columns, by=by,
-            annot=annot, cmap=cmap, vmin=vmin, vmax=vmax,
-            figsize=figsize, title=title,
+            data=self._data,
+            columns=columns,
+            by=by,
+            annot=annot,
+            cmap=cmap,
+            vmin=vmin,
+            vmax=vmax,
+            figsize=figsize,
+            title=title,
         )
 
     def scatter(
@@ -207,7 +222,7 @@ class PlotAccessor:
         figsize: tuple[float, float] = (10, 6),
         palette: str = "muted",
         title: str | None = None,
-    ) -> "ScatterPlot":
+    ) -> ScatterPlot:
         """Create a scatter plot.
 
         Parameters
@@ -224,7 +239,12 @@ class PlotAccessor:
         from siamang.reporting.charts import ScatterPlot
 
         return ScatterPlot(
-            data=self._data, x=x, y=y, hue=hue,
+            data=self._data,
+            x=x,
+            y=y,
+            hue=hue,
             trendline=trendline,
-            figsize=figsize, palette=palette, title=title,
+            figsize=figsize,
+            palette=palette,
+            title=title,
         )
