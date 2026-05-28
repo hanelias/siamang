@@ -167,16 +167,19 @@ class FreqTable(SurveyTable):
             label = value_labels.get(value, str(value))
             rows.append({"Value": value, "Label": label, "N": n})
 
-        df = pd.DataFrame(rows)
+        if rows:
+            df = pd.DataFrame(rows)
+        else:
+            df = pd.DataFrame(columns=["Value", "Label", "N"])
 
-        if self.sort == "freq":
+        if self.sort == "freq" and not df.empty:
             df = df.sort_values("N", ascending=False).reset_index(drop=True)
-        elif self.sort == "label":
+        elif self.sort == "label" and not df.empty:
             df = df.sort_values("Label").reset_index(drop=True)
 
-        total = df["N"].sum()
+        total = int(df["N"].sum()) if not df.empty else 0
         df["%"] = (df["N"] / total * 100).round(1) if total > 0 else 0.0
-        df["Cumulative %"] = df["%"].cumsum().round(1)
+        df["Cumulative %"] = df["%"].cumsum().round(1) if not df.empty else 0.0
 
         # Append total row
         total_row = pd.DataFrame([{

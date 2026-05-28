@@ -429,10 +429,11 @@ class ScatterPlot(SurveyChart):
             else:
                 hue_col = self.hue
 
-        sns.scatterplot(
-            data=frame, x=self.x, y=self.y,
-            hue=hue_col, ax=ax, alpha=0.7, palette=self.palette
-        )
+        scatter_kwargs = dict(data=frame, x=self.x, y=self.y, ax=ax, alpha=0.7)
+        if hue_col:
+            scatter_kwargs["hue"] = hue_col
+            scatter_kwargs["palette"] = self.palette
+        sns.scatterplot(**scatter_kwargs)
 
         if self.trendline and self.hue is None:
             sns.regplot(
