@@ -38,6 +38,15 @@ from siamang.core import (
 )
 from siamang.data import BannerTable, SurveyData, SurveyTables
 from siamang.deploy import DeployResult
+from siamang.reporting import (
+    BarChart,
+    BoxPlot,
+    CrossTable,
+    FreqTable,
+    GroupMeanTable,
+    HeatMap,
+    ScatterPlot,
+)
 from siamang.frontend.theme import UIConfig, get_preset
 from siamang.io import (
     CSVReader,
@@ -105,4 +114,11 @@ __all__ = [
     "read_stata",
     "UIConfig",
     "get_preset",
+    "BarChart",
+    "BoxPlot",
+    "CrossTable",
+    "FreqTable",
+    "GroupMeanTable",
+    "HeatMap",
+    "ScatterPlot",
 ]

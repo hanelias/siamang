@@ -37,6 +37,18 @@ class SurveyData:
             self.frame, variables=self.variables, weight_column=self.weight
         )
 
+    @property
+    def report(self):
+        """Declarative table-generation accessor (FreqTable, CrossTable, GroupMeanTable)."""
+        from siamang.reporting.accessors import ReportAccessor
+        return ReportAccessor(self)
+
+    @property
+    def plot(self):
+        """Declarative chart-generation accessor (BarChart, BoxPlot, HeatMap, ScatterPlot)."""
+        from siamang.reporting.accessors import PlotAccessor
+        return PlotAccessor(self)
+
     def with_frame(self, frame: pd.DataFrame) -> "SurveyData":
         return SurveyData(
             frame=frame,
