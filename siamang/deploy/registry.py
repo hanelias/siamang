@@ -2,8 +2,8 @@
 
 Adapters are discovered via ``importlib.metadata.entry_points`` under the
 ``siamang.backends`` / ``siamang.frontends`` groups, with built-in fallbacks
-for the ``local`` / ``supabase`` / ``vercel`` adapters bundled with the
-package.
+for all bundled adapters (backends: ``local``, ``supabase``, ``gsheets``;
+frontends: ``local``, ``vercel``, ``netlify``).
 """
 
 from __future__ import annotations

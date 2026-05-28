@@ -64,6 +64,12 @@ dev = [
     "mypy>=1.10",
     "pytest>=8.0",
 ]
+# Google Sheets backend requires additional packages not bundled by default.
+gsheets = [
+    "google-auth>=2.0",
+    "google-auth-httplib2>=0.1",
+    "google-api-python-client>=2.0",
+]
 # Backward-compat aliases — every dep is now installed by default with
 # `pip install siamang`. These groups remain for users with old install
 # scripts; they resolve to empty extras.
@@ -81,10 +87,12 @@ siamang = "siamang.cli.entry:main"
 [project.entry-points."siamang.backends"]
 local = "siamang.deploy.backends.local:LocalBackend"
 supabase = "siamang.deploy.backends.supabase:SupabaseBackend"
+gsheets = "siamang.deploy.backends.gsheets:GoogleSheetsBackend"
 
 [project.entry-points."siamang.frontends"]
 local = "siamang.deploy.frontends.local:LocalFrontend"
 vercel = "siamang.deploy.frontends.vercel:VercelFrontend"
+netlify = "siamang.deploy.frontends.netlify:NetlifyFrontend"
 
 # ---------------------------------------------------------------------------
 # Tool configuration

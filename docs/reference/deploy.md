@@ -197,6 +197,18 @@ Ideal for small-to-medium surveys where you want instant access to data in a
 familiar spreadsheet interface, shareable with collaborators without any
 infrastructure.
 
+> [!WARNING]
+> **Experimental / Security Notice for Browser Deployment:**
+> Direct browser-to-Sheets writes require credentials that cannot be safely exposed to the public internet. By default, the `GoogleSheetsClientTemplate` uses a direct `values.append` API call with **no authorization headers**, which only works if the spreadsheet is configured to be publicly writable by anyone (not recommended for production).
+>
+> For secure public deployments (e.g. Netlify), you **must use an Google Apps Script proxy URL** to act as a secure intermediary. Setting up the Apps Script proxy:
+> 1. In your Google Sheet, go to *Extensions* → *Apps Script*.
+> 2. Paste a script that receives POST requests and appends them to the sheet.
+> 3. Deploy it as a *Web App* configured to execute as "Me" and accessible by "Anyone".
+> 4. Pass this URL to your client settings or environment configuration as `apps_script_url`.
+>
+> Without this proxy, public users will not be able to submit responses unless the spreadsheet is fully public. Thus, the Google Sheets backend is currently considered **experimental** for public web deployments.
+
 **Prerequisites:**
 
 1. Create a Google Cloud project and enable the **Google Sheets API** and **Google Drive API**.
@@ -393,9 +405,9 @@ The orchestrator. `run()`:
 
 1. compiles the questionnaire to a `SurveySchema`;
 2. calls `backend.provision(schema)` → `BackendConfig`;
-3. selects the matching `BackendClientTemplate` (`LocalClientTemplate`
-   or `SupabaseClientTemplate`); raises `NotImplementedError` for
-   unknown backend names;
+3. selects the matching `BackendClientTemplate` (`LocalClientTemplate`,
+   `SupabaseClientTemplate`, or `GoogleSheetsClientTemplate`); raises
+   `NotImplementedError` for unknown backend names;
 4. calls `builder.build(schema, client=..., env=..., survey=...)` →
    `SurveyBundle`;
 5. calls `frontend.publish(bundle, config)` → URL;

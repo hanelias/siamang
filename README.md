@@ -168,7 +168,9 @@ export NETLIFY_AUTH_TOKEN=nfp_...
 siamang deploy my_survey.py --backend gsheets --frontend netlify
 ```
 
-Responses are written directly to a Google Spreadsheet (one row per respondent). The survey is hosted on Netlify CDN with automatic HTTPS and global edge distribution.
+Responses are written to a Google Spreadsheet (one row per respondent) via an **Apps Script proxy** that acts as a secure intermediary. The survey is hosted on Netlify CDN with automatic HTTPS and global edge distribution.
+
+> **Note:** The Google Sheets backend is currently **experimental** for public web deployments. Browser-to-Sheets writes require an Apps Script Web App URL to avoid exposing credentials. See [`docs/reference/deploy.md`](docs/reference/deploy.md#googlesheetsbackend) for setup instructions.
 
 ### Deployment combinations
 
