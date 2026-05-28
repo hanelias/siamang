@@ -1,0 +1,10 @@
+[console_scripts]
+siamang = siamang.cli.entry:main
+
+[siamang.backends]
+local = siamang.deploy.backends.local:LocalBackend
+supabase = siamang.deploy.backends.supabase:SupabaseBackend
+
+[siamang.frontends]
+local = siamang.deploy.frontends.local:LocalFrontend
+vercel = siamang.deploy.frontends.vercel:VercelFrontend
