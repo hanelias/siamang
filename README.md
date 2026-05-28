@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#quick-start">Quick start</a> ·
-  <a href="MANUAL.md">Manual</a> ·
+  <a href="MANUAL.md">Manual</a>
 </p>
 
 ---
