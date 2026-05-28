@@ -12,6 +12,7 @@ from siamang.frontend.builder import FrontendBuilder
 from siamang.frontend.client import (
     BackendClientTemplate,
     ClientEnv,
+    GoogleSheetsClientTemplate,
     LocalClientTemplate,
     SupabaseClientTemplate,
 )
@@ -24,6 +25,7 @@ if TYPE_CHECKING:
 _CLIENT_TEMPLATES: dict[str, type[BackendClientTemplate]] = {
     "local": LocalClientTemplate,
     "supabase": SupabaseClientTemplate,
+    "gsheets": GoogleSheetsClientTemplate,
 }
 
 

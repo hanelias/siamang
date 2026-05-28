@@ -17,11 +17,13 @@ from siamang.deploy.base import BackendAdapter, FrontendAdapter
 _BUILTIN_BACKENDS = {
     "local": "siamang.deploy.backends.local:LocalBackend",
     "supabase": "siamang.deploy.backends.supabase:SupabaseBackend",
+    "gsheets": "siamang.deploy.backends.gsheets:GoogleSheetsBackend",
 }
 
 _BUILTIN_FRONTENDS = {
     "local": "siamang.deploy.frontends.local:LocalFrontend",
     "vercel": "siamang.deploy.frontends.vercel:VercelFrontend",
+    "netlify": "siamang.deploy.frontends.netlify:NetlifyFrontend",
 }
 
 
