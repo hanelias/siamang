@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="siamang_logo.png" alt="siamang" width="160">
+  <img src="https://raw.githubusercontent.com/hanelias/siamang/main/siamang_logo.png" alt="siamang" width="160">
 </p>
 
 <h1 align="center">siamang</h1>
