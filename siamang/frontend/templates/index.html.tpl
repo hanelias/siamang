@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>${title}</title>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="${surveyjs_css}">
   <link rel="stylesheet" href="${css_href}">
 </head>
@@ -33,8 +33,8 @@
       }
       const survey = new SurveyCore.Model(schema);
 
-      const transportName = (window.SURVLIB_ENV && window.SURVLIB_ENV.transport) || "noop";
-      const transport = (window.SURVLIB_TRANSPORTS || {})[transportName];
+      const transportName = (window.SIAMANG_ENV && window.SIAMANG_ENV.transport) || "noop";
+      const transport = (window.SIAMANG_TRANSPORTS || {})[transportName];
 
       const container = document.getElementById("surveyContainer");
       const progressFill = document.getElementById("siamang-progress-fill");
@@ -51,8 +51,29 @@
       survey.onCurrentPageChanged.add(updateProgress);
       survey.onStarted.add(updateProgress);
 
+      /**
+       * Flatten nested objects (e.g. SurveyJS matrix responses) into
+       * dot-separated top-level keys.
+       *
+       * Example: { matrix_q: { row1: 3, row2: 4 } }
+       *       -> { "matrix_q.row1": 3, "matrix_q.row2": 4 }
+       */
+      function flattenResponses(data) {
+        const result = {};
+        for (const [key, value] of Object.entries(data)) {
+          if (value !== null && typeof value === "object" && !Array.isArray(value)) {
+            for (const [subKey, subVal] of Object.entries(value)) {
+              result[key + "." + subKey] = subVal;
+            }
+          } else {
+            result[key] = value;
+          }
+        }
+        return result;
+      }
+
       survey.onComplete.add(async function(sender) {
-        const responses = sender.data;
+        const responses = flattenResponses(sender.data);
         if (transport && typeof transport.submit === "function") {
           try {
             await transport.submit(responses);
