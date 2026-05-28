@@ -1,0 +1,4 @@
+# Generated artifacts (re-created by running the notebook)
+fig_*.png
+banner_*.xlsx
+survey_responses.db

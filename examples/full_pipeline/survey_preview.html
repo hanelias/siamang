@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Remote Work &amp; Algorithmic Management in IT</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/survey-core@2.5.23/survey-core.min.css">
+  <style>
+/* ── siamang theme — research-grade ─────────────────────────────────── */
+
+:root {
+  --siamang-primary:        #2c5f8a;
+  --siamang-accent:         #2c5f8a;
+  --siamang-bg:             #fbfbfb;
+  --siamang-surface:        #ffffff;
+  --siamang-text:           #1a1a1a;
+  --siamang-muted:          #5a5a5a;
+  --siamang-border:         #e6e4df;
+  --siamang-font:           "Source Serif 4", "Charter", Georgia, "Times New Roman", serif;
+  --siamang-heading-font:   "Source Serif 4", "Charter", Georgia, serif;
+  --siamang-mono:           "JetBrains Mono", "Menlo", "Consolas", monospace;
+  --siamang-font-size:      15.5px;
+  --siamang-line-height:    1.6;
+  --siamang-width:          700px;
+  --siamang-radius:         4px;
+  --siamang-section-gap:    28px;
+  --siamang-item-gap:       14px;
+  --siamang-control-pad:    12px;
+  --siamang-page-pad:       36px;
+  --siamang-focus-ring:     0 0 0 3px color-mix(in srgb, var(--siamang-accent) 35%, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-siamang-force-light]) {
+    color-scheme: dark light;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--siamang-bg);
+  color: var(--siamang-text);
+  font-family: var(--siamang-font);
+  font-size: var(--siamang-font-size);
+  line-height: var(--siamang-line-height);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--siamang-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+a:focus-visible { outline: none; box-shadow: var(--siamang-focus-ring); border-radius: 2px; }
+
+.siamang-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--siamang-accent);
+  color: #fff;
+  padding: 8px 12px;
+  z-index: 1000;
+}
+.siamang-skip-link:focus { left: 8px; top: 8px; }
+
+#survey {
+  max-width: var(--siamang-width);
+  margin: 0 auto;
+  padding: var(--siamang-page-pad) 20px 64px;
+}
+
+/* ── institutional header ──────────────────────────────────────────── */
+
+.siamang-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 20px;
+  margin-bottom: var(--siamang-section-gap);
+  border-bottom: 1px solid var(--siamang-border);
+}
+.siamang-header.right     { flex-direction: row-reverse; text-align: right; }
+.siamang-header.center    { flex-direction: column; text-align: center; }
+.siamang-header__logo     { height: 44px; width: auto; flex-shrink: 0; }
+.siamang-header__text     { flex: 1; min-width: 0; }
+.siamang-header__title    {
+  font-family: var(--siamang-heading-font);
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 4px;
+  letter-spacing: -0.005em;
+}
+.siamang-header__institution {
+  color: var(--siamang-muted);
+  font-size: 0.92rem;
+  margin: 0;
+}
+.siamang-header__subtitle {
+  color: var(--siamang-muted);
+  font-size: 0.95rem;
+  margin: 4px 0 0;
+  font-style: italic;
+}
+
+/* ── progress strip ────────────────────────────────────────────────── */
+
+.siamang-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: var(--siamang-section-gap);
+  font-size: 0.85rem;
+  color: var(--siamang-muted);
+  font-variant-numeric: tabular-nums;
+}
+.siamang-progress__bar {
+  flex: 1;
+  height: 3px;
+  background: var(--siamang-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.siamang-progress__fill {
+  display: block;
+  height: 100%;
+  background: var(--siamang-accent);
+  width: 0;
+  transition: width 200ms ease-out;
+}
+
+/* ── SurveyJS overrides (defaultV2) ────────────────────────────────── */
+
+.sd-root-modern,
+.sv-root-modern {
+  --primary: var(--siamang-accent) !important;
+  --primary-light: color-mix(in srgb, var(--siamang-accent) 12%, var(--siamang-surface)) !important;
+  --background: var(--siamang-bg) !important;
+  --background-dim: var(--siamang-bg) !important;
+  --foreground: var(--siamang-text) !important;
+  --base-unit: 8px !important;
+  background: var(--siamang-bg) !important;
+  font-family: var(--siamang-font) !important;
+}
+
+.sd-page,
+.sv_page_root {
+  background: var(--siamang-surface);
+  border: 1px solid var(--siamang-border);
+  border-radius: var(--siamang-radius);
+  padding: var(--siamang-section-gap);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+.sd-page__title,
+.sv_p_title {
+  font-family: var(--siamang-heading-font);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 var(--siamang-item-gap);
+  color: var(--siamang-text);
+  letter-spacing: -0.005em;
+}
+
+.sd-question,
+.sv_q {
+  margin-bottom: var(--siamang-section-gap);
+}
+
+.sd-question__title,
+.sv_q_title {
+  font-family: var(--siamang-heading-font);
+  font-size: 1.02rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: var(--siamang-text);
+}
+
+.sd-question__num {
+  color: var(--siamang-muted);
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.sd-question__description {
+  color: var(--siamang-muted);
+  font-size: 0.92rem;
+  margin: 0 0 12px;
+  font-style: italic;
+}
+
+.sd-question__required-text {
+  color: var(--siamang-accent);
+  margin-left: 4px;
+}
+
+/* inputs */
+
+.sd-input,
+.sv_q_text_root input,
+.sv_q_text_root textarea {
+  width: 100%;
+  padding: var(--siamang-control-pad) 12px;
+  font: inherit;
+  color: var(--siamang-text);
+  background: var(--siamang-surface);
+  border: 1px solid var(--siamang-border);
+  border-radius: var(--siamang-radius);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.sd-input:focus,
+.sv_q_text_root input:focus,
+.sv_q_text_root textarea:focus {
+  outline: none;
+  border-color: var(--siamang-accent);
+  box-shadow: var(--siamang-focus-ring);
+}
+
+/* radios / checkboxes */
+
+.sd-radio,
+.sd-checkbox,
+.sv_q_radiogroup .sv_q_radiogroup_label,
+.sv_q_checkbox .sv_q_checkbox_label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: var(--siamang-control-pad) 8px;
+  border-radius: var(--siamang-radius);
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+.sd-radio:hover,
+.sd-checkbox:hover {
+  background: color-mix(in srgb, var(--siamang-accent) 6%, transparent);
+}
+.sd-radio__decorator,
+.sd-checkbox__decorator {
+  border-color: var(--siamang-muted) !important;
+}
+.sd-item--checked .sd-radio__decorator,
+.sd-item--checked .sd-checkbox__decorator {
+  background: var(--siamang-accent) !important;
+  border-color: var(--siamang-accent) !important;
+}
+
+/* Likert / rating */
+
+.sd-rating,
+.sv_q_rating {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 0;
+}
+.sd-rating__item,
+.sv_q_rating_item {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--siamang-border);
+  border-radius: var(--siamang-radius);
+  background: var(--siamang-surface);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.sd-rating__item:hover,
+.sv_q_rating_item:hover {
+  border-color: var(--siamang-accent);
+}
+.sd-rating__item--selected,
+.sv_q_rating_item.checked {
+  background: var(--siamang-accent);
+  border-color: var(--siamang-accent);
+  color: #fff;
+}
+
+/* matrix */
+
+.sd-matrix table,
+.sv_q_matrix table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+}
+.sd-matrix th,
+.sd-matrix td,
+.sv_q_matrix th,
+.sv_q_matrix td {
+  border-bottom: 1px solid var(--siamang-border);
+  padding: 12px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+.sd-matrix th:first-child,
+.sd-matrix td:first-child {
+  text-align: left;
+  color: var(--siamang-text);
+  font-weight: 500;
+}
+
+/* buttons */
+
+.sd-navigation__complete-btn,
+.sd-navigation__next-btn,
+.sd-navigation__prev-btn,
+.sv_complete_btn,
+.sv_next_btn,
+.sv_prev_btn,
+button[type="submit"] {
+  font: inherit;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: var(--siamang-radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.sd-navigation__complete-btn,
+.sd-navigation__next-btn,
+.sv_complete_btn,
+.sv_next_btn,
+button[type="submit"] {
+  background: var(--siamang-accent);
+  color: #fff;
+}
+.sd-navigation__complete-btn:hover,
+.sd-navigation__next-btn:hover,
+.sv_complete_btn:hover,
+.sv_next_btn:hover,
+button[type="submit"]:hover {
+  background: color-mix(in srgb, var(--siamang-accent) 88%, black);
+}
+
+.sd-navigation__prev-btn,
+.sv_prev_btn {
+  background: transparent;
+  color: var(--siamang-text);
+  border-color: var(--siamang-border);
+}
+.sd-navigation__prev-btn:hover,
+.sv_prev_btn:hover {
+  background: color-mix(in srgb, var(--siamang-accent) 6%, transparent);
+  border-color: var(--siamang-accent);
+}
+
+button:focus-visible {
+  outline: none;
+  box-shadow: var(--siamang-focus-ring);
+}
+
+/* completed page */
+
+.sd-completedpage,
+.sv_completed_page {
+  background: var(--siamang-surface);
+  border: 1px solid var(--siamang-border);
+  border-radius: var(--siamang-radius);
+  padding: var(--siamang-section-gap);
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* ── footer ───────────────────────────────────────────────────────── */
+
+.siamang-footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--siamang-border);
+  font-size: 0.85rem;
+  color: var(--siamang-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  align-items: baseline;
+}
+.siamang-footer__ethics {
+  flex-basis: 100%;
+  font-style: italic;
+  margin: 0 0 8px;
+}
+
+/* ── closed / quota-full page ────────────────────────────────────── */
+
+.siamang-closed {
+  max-width: var(--siamang-width);
+  margin: 80px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+.siamang-closed h2 {
+  font-family: var(--siamang-heading-font);
+  font-weight: 600;
+  font-size: 1.7rem;
+  margin: 0 0 16px;
+}
+.siamang-closed p {
+  font-size: 1.05rem;
+  color: var(--siamang-muted);
+  margin: 0;
+}
+
+/* ── responsive ───────────────────────────────────────────────────── */
+
+@media (max-width: 540px) {
+  #survey { padding: 24px 16px 56px; }
+  .siamang-header__title    { font-size: 1.25rem; }
+  .sd-rating__item          { min-width: 40px; min-height: 40px; }
+}
+
+@media print {
+  body { background: #fff; color: #000; }
+  .siamang-header, .siamang-footer, .siamang-progress { border-color: #000; }
+  .sd-navigation, .siamang-skip-link { display: none !important; }
+}
+
+</style>
+</head>
+<body>
+  <a class="siamang-skip-link" href="#surveyContainer">Skip to questionnaire</a>
+  <div id="survey">
+    <header class="siamang-header left"><div class="siamang-header__text"><h1 class="siamang-header__title">Remote Work &amp; Algorithmic Management in IT</h1></div></header>
+    <div class="siamang-progress" role="status" aria-live="polite"><span class="siamang-progress__bar" aria-hidden="true"><span id="siamang-progress-fill" class="siamang-progress__fill"></span></span><span id="siamang-progress-text" class="siamang-progress__text"></span></div>
+    <main id="surveyContainer" role="main" aria-label="Remote Work &amp; Algorithmic Management in IT"></main>
+    
+  </div>
+  <script src="https://unpkg.com/survey-core@2.5.23/survey.core.min.js"></script>
+  <script src="https://unpkg.com/survey-js-ui@2.5.23/survey-js-ui.min.js"></script>
+  <script>
+
+window.SIAMANG_ENV = {"transport": "demo", "survey_id": "demo_preview"};
+window.SIAMANG_TRANSPORTS = window.SIAMANG_TRANSPORTS || {};
+window.SIAMANG_TRANSPORTS.demo = {
+  async submit(responses) {
+    alert("Survey completed! Responses: " + JSON.stringify(responses, null, 2));
+    return { ok: true };
+  },
+  async checkQuota() { return { ok: true }; }
+};
+
+</script>
+  <script>
+    (function() {
+      const schema = {"title": "Remote Work & Algorithmic Management in IT", "locale": "en", "pages": [{"name": "consent", "title": "Informed Consent", "elements": [{"id": "consent", "name": "consent", "title": "Do you consent to participate in this research study on remote work and digital monitoring?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Yes, I agree to participate"}, {"value": 0, "text": "No, I do not wish to participate"}]}]}, {"name": "demographics", "title": "Demographics", "elements": [{"id": "age", "name": "age", "title": "What is your age?", "isRequired": true, "type": "text", "inputType": "number"}, {"id": "gender", "name": "gender", "title": "How do you identify?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Male"}, {"value": 2, "text": "Female"}, {"value": 3, "text": "Non-binary"}, {"value": 4, "text": "Prefer not to say"}]}], "visibleIf": "{consent} = 1"}, {"name": "professional", "title": "Professional Background", "elements": [{"id": "it_role", "name": "it_role", "title": "What is your primary IT role?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Software Engineer"}, {"value": 2, "text": "Data Scientist / ML Engineer"}, {"value": 3, "text": "DevOps / SRE"}, {"value": 4, "text": "Product Manager"}, {"value": 5, "text": "Other"}]}, {"id": "experience", "name": "experience", "title": "How many years of professional IT experience do you have?", "isRequired": true, "type": "text", "inputType": "number"}, {"id": "remote_freq", "name": "remote_freq", "title": "How often do you work remotely?", "isRequired": true, "type": "radiogroup", "choices": [{"value": 1, "text": "Never (fully on-site)"}, {"value": 2, "text": "Occasionally (1-2 days/month)"}, {"value": 3, "text": "Hybrid (2-3 days/week)"}, {"value": 4, "text": "Mostly remote (4+ days/week)"}, {"value": 5, "text": "Fully remote"}]}], "visibleIf": "{consent} = 1"}, {"name": "surveillance", "title": "Workplace Monitoring", "elements": [{"id": "matrix_surv_keystroke", "name": "matrix_surv_keystroke", "title": "To what extent do you agree that the following monitoring tools are used at your workplace?", "isRequired": false, "type": "matrix", "columns": [{"value": 1, "text": "Strongly disagree"}, {"value": 2, "text": "Disagree"}, {"value": 3, "text": "Neutral"}, {"value": 4, "text": "Agree"}, {"value": 5, "text": "Strongly agree"}], "rows": [{"value": "surv_keystroke", "text": "Keystroke logging / activity tracking"}, {"value": "surv_camera", "text": "Webcam monitoring / periodic screenshots"}, {"value": "surv_git", "text": "Git commit frequency metrics"}]}], "visibleIf": "({consent} = 1) and ({remote_freq} >= 2)"}, {"name": "outcomes", "title": "Work Outcomes", "elements": [{"id": "satisfaction", "name": "satisfaction", "title": "How satisfied are you with your current job overall?", "isRequired": false, "type": "rating", "rateMax": 5, "rateMin": 1}, {"id": "autonomy", "name": "autonomy", "title": "How much autonomy do you have in deciding how to do your work?", "isRequired": false, "type": "rating", "rateMax": 5, "rateMin": 1}], "visibleIf": "{consent} = 1"}, {"name": "qualitative", "title": "Your Experience", "elements": [{"id": "story", "name": "story", "title": "Please share any experience you have had with algorithmic management or automated monitoring at work.", "isRequired": false, "type": "comment"}], "visibleIf": "{consent} = 1"}], "showProgressBar": "top", "showPrevButton": true, "completedHtml": "<h3>Thank you for your participation!</h3>"};
+      const SurveyCore = window.Survey || window.SurveyCore;
+      if (!SurveyCore || typeof SurveyCore.Model !== "function") {
+        console.error("siamang: survey-core failed to load from CDN.");
+        return;
+      }
+      const survey = new SurveyCore.Model(schema);
+
+      const transportName = (window.SURVLIB_ENV && window.SURVLIB_ENV.transport) || "noop";
+      const transport = (window.SURVLIB_TRANSPORTS || {})[transportName];
+
+      const container = document.getElementById("surveyContainer");
+      const progressFill = document.getElementById("siamang-progress-fill");
+      const progressText = document.getElementById("siamang-progress-text");
+
+      function updateProgress(sender) {
+        if (!progressFill && !progressText) return;
+        const total = sender.visiblePageCount || sender.pageCount || sender.PageCount || 1;
+        const current = (sender.currentPageNo || 0) + 1;
+        const ratio = total > 0 ? Math.min(100, Math.round(current / total * 100)) : 0;
+        if (progressFill) progressFill.style.width = ratio + "%";
+        if (progressText) progressText.textContent = "Page " + current + " of " + total;
+      }
+      survey.onCurrentPageChanged.add(updateProgress);
+      survey.onStarted.add(updateProgress);
+
+      survey.onComplete.add(async function(sender) {
+        const responses = sender.data;
+        if (transport && typeof transport.submit === "function") {
+          try {
+            await transport.submit(responses);
+          } catch (err) {
+            console.error("siamang transport error:", err);
+          }
+        }
+      });
+
+      // SurveyJS 2.x: window.SurveyUI.renderSurvey(model, container)
+      if (window.SurveyUI && typeof window.SurveyUI.renderSurvey === "function") {
+        window.SurveyUI.renderSurvey(survey, container);
+      } else if (window.SurveyJS && window.SurveyJS.SurveyUI &&
+                 typeof window.SurveyJS.SurveyUI.renderSurvey === "function") {
+        window.SurveyJS.SurveyUI.renderSurvey(survey, container);
+      } else if (window.SurveyJSUI && typeof window.SurveyJSUI.renderSurvey === "function") {
+        window.SurveyJSUI.renderSurvey(survey, container);
+      } else {
+        console.error("siamang: survey-js-ui renderer not found on window.");
+      }
+      updateProgress(survey);
+    })();
+  </script>
+</body>
+</html>
