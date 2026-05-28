@@ -36,7 +36,7 @@ my_survey.py          ← you write this
     │
     ├─ siamang validate   → catches errors before deployment
     ├─ siamang preview    → local React frontend (hot-reload)
-    ├─ siamang deploy     → Vercel + Supabase (production)
+    ├─ siamang deploy     → Vercel + Supabase (cloud deployment)
     └─ siamang init       → configures deployment credentials
 ```
 
@@ -96,7 +96,7 @@ siamang preview examples/demo_survey.py --port 8000 --open
 | **Scripts** | Inline JavaScript for survey-side behaviour — 7 trigger points (`onInit`, `onPageEnter`, `onPageExit`, `onQuestionShow`, `onAnswer`, `onSubmit`, `onRandomize`) |
 | **Frontend** | React 18 runtime, keyboard navigation, swipe gestures, dark mode, per-question error boundaries, auto-save, access codes |
 | **CLI** | `validate`, `preview`, `deploy`, `init` |
-| **Backend** | Local SQLite for dev, Supabase for production (RLS policies, pagination, quota counters, migration export) |
+| **Backend** | Local SQLite for dev, Supabase for cloud (RLS policies, pagination, quota counters, migration export) |
 | **Deploy** | Vercel frontend with CSP headers and cache control; survey data is bundled into a self-contained HTML payload |
 | **Data I/O** | CSV, Excel (.xlsx), SPSS (.sav), Stata (.dta), R (.rda) — round-trip with `labels`, `missing_values`, `formats` preserved |
 
@@ -111,7 +111,7 @@ pip install git+https://github.com/hanelias/siamang.git
 siamang preview my_survey.py        # → http://127.0.0.1:8000
 ```
 
-### Production (Vercel + Supabase)
+### Cloud deployment (Vercel + Supabase)
 
 ```bash
 siamang init                                   # one-time: stores credentials
@@ -120,11 +120,10 @@ siamang deploy my_survey.py --backend supabase --frontend vercel
 
 The deploy command:
 
-1. Compiles JSX → JavaScript via Babel (or sucrase, when available).
-2. Bundles your survey into a self-contained HTML payload.
-3. Uploads static assets to Vercel.
-4. Provisions Supabase tables with row-level security and quota counters.
-5. Prints the response dashboard URL.
+1. Bundles your survey into a self-contained HTML payload (pre-built React runtime).
+2. Uploads static assets to Vercel.
+3. Provisions Supabase tables with row-level security and quota counters.
+4. Prints the response dashboard URL.
 
 ---
 
@@ -161,7 +160,7 @@ siamang/
 ## Requirements
 
 - **Python 3.11+**
-- For production deployment: a **Supabase** project + anon key, and a
+- For cloud deployment: a **Supabase** project + anon key, and a
   **Vercel** account.
 
 ---

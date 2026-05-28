@@ -293,11 +293,11 @@ Works from a `SurveySchema` alone (does not need the live
 ReactRuntime(precompile: bool = True)
 ```
 
-The default runtime. Self-contained: ships a hand-tuned React 18
-template and pre-compiles JSX to JS at bundle-build time via
-`npx sucrase` (preferred) or `npx @babel/cli` (fallback). When neither
-is available, the JSX is shipped raw and compiled by `@babel/standalone`
-in the browser.
+The default runtime. Self-contained: ships a pre-built React 18 bundle
+(`dist/bundle.js`) that includes all question components, the answers
+store, visibility engine, and navigation hooks. No JSX compilation
+happens at deploy time — the bundle is built once during development
+via `scripts/build_react_bundle.py` (uses sucrase for JSX→JS).
 
 Required context: `survey` must be set. `render_html` raises
 `ValueError` otherwise.

@@ -170,11 +170,14 @@ def generate_migration_sql(
     ]
 
     if survey_id:
+        # Escape single quotes for safe SQL string literals
+        safe_id = survey_id.replace("'", "''")
+        safe_title = title.replace("'", "''")
         parts.extend([
             "",
             "-- 6. Register this survey",
             f"INSERT INTO survey_meta (survey_id, title) "
-            f"VALUES ('{survey_id}', '{title}') ON CONFLICT (survey_id) DO NOTHING;",
+            f"VALUES ('{safe_id}', '{safe_title}') ON CONFLICT (survey_id) DO NOTHING;",
         ])
 
     parts.append("")
