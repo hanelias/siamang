@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#quick-start">Quick start</a> ·
-  <a href="#full-pipeline-example">Full pipeline</a> ·
+  <a href="#full-pipeline-example">Full pipeline example</a> ·
   <a href="docs/reference/">API Reference</a>
 </p>
 
