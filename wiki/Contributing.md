@@ -76,7 +76,7 @@ keep public signatures annotated.
 
 ## Project layout
 
-```
+```text
 siamang/
 ├── siamang/                 # the package
 │   ├── __init__.py          # the public API surface (see API Reference Index)
