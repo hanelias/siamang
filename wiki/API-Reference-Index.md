@@ -54,7 +54,7 @@ Re-exported at the top level. Documented in
 
 | Symbol | Import | Description | Docs |
 | :--- | :--- | :--- | :--- |
-| `Questionnaire` | `from siamang import Questionnaire` | The top-level survey: pages, variables, scripts, quotas. | [[Pages Blocks and Structure\|Pages-Blocks-and-Structure]] |
+| `Questionnaire` | `from siamang import Questionnaire` | The top-level survey: pages, variables, scripts, deadline. | [[Pages Blocks and Structure\|Pages-Blocks-and-Structure]] |
 | `Page` | `from siamang import Page` | A page of items, with optional `show_if`/`hide_if`/`next_if`. | [[Pages Blocks and Structure\|Pages-Blocks-and-Structure]] |
 | `Block` | `from siamang import Block` | A group of items within a page. | [[Pages Blocks and Structure\|Pages-Blocks-and-Structure]] |
 
@@ -89,8 +89,8 @@ The dataset object and its derived tables. Documented in
 | `SurveyTables` | `from siamang.data import SurveyTables` | The `data.tables` accessor (banner and summary tables). | [[Banner Tables\|Banner-Tables]] |
 | `BannerTable` | `from siamang.data import BannerTable` | A cross-break banner table with Excel/CSV export. | [[Banner Tables\|Banner-Tables]] |
 
-> `SurveyData` is not re-exported at the top level — import it from `siamang.data`
-> (the [[Deployment]] examples alias it as `sg.SurveyData` for brevity; both work).
+> `SurveyData` is also re-exported at the top level, so `from siamang import SurveyData`
+> and `from siamang.data import SurveyData` both work.
 
 ---
 

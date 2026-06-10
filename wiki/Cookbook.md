@@ -194,20 +194,29 @@ survey = sg.Questionnaire(title="…", pages=[...], scripts=[log_dwell])
 
 ## Weighting and analysis
 
-See [[Analysis]]. `with_weight(col)` returns a weighted view; `data.report.*` honours
-the weight automatically.
+See [[Analysis]]. `with_weight(col)` returns a view whose **`analysis` accessor**
+honours the weight (pass `weighted=True` per call); the declarative `data.report.*`
+tables are unweighted. `simulate()` does not generate a weight column, so attach
+one to the frame first:
 
 ```python
-data = survey.simulate(n=1000, seed=42).with_weight("weight")
+import numpy as np
 
-# High-level declarative reporting (recommended)
-print(data.report.freq("trust", weighted=True).to_markdown())
-print(data.report.crosstab("gender", "party", weighted=True).to_markdown())  # Chi-square / Cramér's V
+data = survey.simulate(n=1000, seed=42)
+frame = data.frame.assign(
+    weight=np.random.default_rng(0).uniform(0.5, 1.5, len(data.frame))
+)
+data = data.with_frame(frame).with_weight("weight")
 
-# Low-level statistical methods
+# Weighted statistics (analysis accessor)
+data.analysis.mean("trust", weighted=True)
 data.analysis.frequencies("trust", labels=True, weighted=True, normalize=True)
+data.analysis.grouped_mean("trust", by="gender", weighted=True)
 data.analysis.proportion_ci("trust", value=5, confidence=0.95, weighted=True)
-data.with_weight("weight").analysis.effective_sample_size()   # ESS ≤ N
+data.analysis.effective_sample_size()   # ESS ≤ N
+
+# Declarative tables remain unweighted
+print(data.report.freq("trust").to_markdown())
 ```
 
 ### Scale reliability and indices

@@ -414,16 +414,15 @@ immediately (no payment), so the tier system is fully exercisable without Stripe
 
 ## Assistant
 
-AI assistant — a Plus/Pro feature (`FEATURE_AI`). The default `stub` provider
-returns deterministic canned suggestions until a real model is wired in.
+AI assistant endpoint (parked). The route and the `FEATURE_AI` flag exist, but the
+feature was removed from the product for beta-2 and **no plan includes it**, so the
+endpoint currently answers `402 Payment Required` on every plan. The `stub` provider
+behind it returns deterministic canned suggestions and is kept for the future
+service-integration stage.
 
 | Method & path | Auth | Purpose |
 | :--- | :--- | :--- |
-| `POST /projects/{project_id}/assistant` | analyst | Ask the assistant (`usecase`: `authoring`/`nl_query`/`script`/`report`) |
-
-```json
-{"usecase": "script", "output": "…suggested code…", "provider": "stub"}
-```
+| `POST /projects/{project_id}/assistant` | analyst | Ask the assistant (`usecase`: `authoring`/`nl_query`/`script`/`report`) — currently `402` on all plans |
 
 ## SSO
 

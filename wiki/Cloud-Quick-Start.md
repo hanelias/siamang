@@ -90,7 +90,7 @@ or MinIO required. This is the fastest way to explore the UI:
 ```bash
 cd web
 npm install
-NEXT_PUBLIC_USE_MOCK=true npm run dev    # http://localhost:3001
+NEXT_PUBLIC_USE_MOCK=true npm run dev    # http://localhost:3000 (next dev default)
 ```
 
 Every screen works against `web/lib/mock.ts` fixtures (Repository, Database,

@@ -77,7 +77,7 @@ A single execution of an analysis script (or a run-all).
 | :--- | :--- |
 | `type` | `analysis` (single script) or `analysis_all` (run all) |
 | `path`, `commit_sha` | Script entry path; pinned commit |
-| `status` | `queued` / `running` → `success` / `failed` |
+| `status` | `queued` / `running` → `completed` / `failed` |
 | `output_path`, `report_key` | Output location and the generated report's object key |
 | `log` | Captured stdout |
 
