@@ -67,16 +67,16 @@ print(banner.frame.head(6).to_string())
 ```
 
 ```text
-  row_variable  row_value       row_label column_variable  column_value   column_label    n   percent
-0      it_role        1.0        Engineer     remote_freq           1.0          Never  4.0  0.160000
-1      it_role        1.0        Engineer     remote_freq           2.0   Occasionally  8.0  0.444444
-2      it_role        1.0        Engineer     remote_freq           3.0         Hybrid  7.0  0.368421
-3      it_role        1.0        Engineer     remote_freq           4.0  Mostly remote  6.0  0.352941
-4      it_role        1.0        Engineer     remote_freq           5.0   Fully remote  3.0  0.130435
-5      it_role        2.0  Data Scientist     remote_freq           1.0          Never  5.0  0.200000
+  row_variable  row_value       row_label column_variable  column_value   column_label     n   percent
+0      it_role          1        Engineer     remote_freq             1          Never  10.0  0.222222
+1      it_role          1        Engineer     remote_freq             2   Occasionally  11.0  0.282051
+2      it_role          1        Engineer     remote_freq             3         Hybrid  16.0  0.326531
+3      it_role          1        Engineer     remote_freq             4  Mostly remote  12.0  0.387097
+4      it_role          1        Engineer     remote_freq             5   Fully remote   9.0  0.250000
+5      it_role          2  Data Scientist     remote_freq             1          Never   9.0  0.200000
 ```
 
-Read row 0 as: among respondents whose `remote_freq` is *Never*, 16% are
+Read row 0 as: among respondents whose `remote_freq` is *Never*, 22.2% are
 Engineers. Pass multiple variables to profile several breakdowns at once:
 
 ```python

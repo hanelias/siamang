@@ -78,6 +78,12 @@ A script can emit results in four non-exclusive ways:
 | File in `outputs/` | `df.to_excel("outputs/result.xlsx")` | Files (object storage) |
 | Log | `print(...)` | Analysis → run details / log |
 
+> **Storage vs. surfacing:** the rendered report itself is *stored* in object
+> storage (MinIO/S3 — the worker uploads it and records the object key on
+> `runs.report_key`), not committed back to the repository; the **Reports**
+> tab / `GET /projects/{id}/reports` endpoint is the surfacing layer that lists
+> and serves it.
+
 ### Artifact storage
 
 When object storage (MinIO/S3) is configured, the worker uploads each `outputs/`

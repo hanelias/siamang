@@ -11,10 +11,6 @@ data transfer is intentionally deferred. An adapter only *defines* a target and
 *validates* its config — there is no transfer logic and no simulation. Real I/O
 lands in the final Service Integration stage.
 
-See also: [[Cloud Subscription Tiers|Cloud-Subscription-Tiers]] ·
-[[Project Config (siamang.yaml)|Cloud-siamang-yaml]] ·
-[[Cloud Sandbox and Security|Cloud-Sandbox-and-Security]].
-
 ---
 
 ## The connector catalog
@@ -66,11 +62,17 @@ tasks:
     type: connector
     target: bigquery
     direction: out
-    table: clean_responses
+    table: clean_responses          # project table to export
     secret: BQ_SERVICE_ACCOUNT      # a project_secrets key
-    dataset: research
-    # …adapter-specific config…
+    config:                         # adapter-specific settings (nested under config:)
+      dataset: research
+      table: responses_export
 ```
+
+The worker reads adapter settings from the nested `config:` mapping
+(`deploy_util.connector_tasks`); keys placed at the task's top level are ignored.
+Each target's required `config` keys are in the catalog table above (e.g. `s3`
+needs `bucket` + `key`; `bigquery` needs `dataset` + `table`).
 
 `api/app/routers/connectors.py` exposes:
 
@@ -108,3 +110,7 @@ creating a connector adds it to an in-memory list; in live mode, connectors are
 declared in `siamang.yaml` and committed — the UI directs you there rather than
 creating one through a form. Git mirrors (the other half of the
 `FEATURE_CONNECTORS` entitlement) are configured under **Settings → Git mirrors**.
+
+## See also
+
+[[Cloud Subscription Tiers|Cloud-Subscription-Tiers]] · [[Project Config (siamang.yaml)|Cloud-siamang-yaml]] · [[Cloud Sandbox and Security|Cloud-Sandbox-and-Security]]

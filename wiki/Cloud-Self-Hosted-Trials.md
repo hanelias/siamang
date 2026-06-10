@@ -3,18 +3,15 @@
 The self-hosted demo can grant prospects a real, end-to-end trial of the product
 through **invite codes**. An operator mints codes (or redeem links); redeeming one
 creates a fresh **Pro** organization that lives for a fixed number of days
-(default 14). When the trial lapses the org is downgraded to Free immediately, and
-a cleanup worker **hard-deletes** the org and its data after a short grace period.
+(default 14). When the trial lapses the org is locked out immediately — every
+org/project request returns **403**, and only `/auth/me` still answers, reporting
+the plan as `free` — and a cleanup worker **hard-deletes** the org and its data
+after a short grace period.
 
 This is a fully working, real-backend system: the invite/redeem flow, the
 time-limited Pro plan, expiry enforcement + cleanup, operator tooling (admin API +
 CLI), and the live-mode redemption UX are all wired and tested. Payments/Stripe and
 the cloud (Supabase/Fly) architecture are out of scope here.
-
-See also: [[Cloud Deployment|Cloud-Deployment]] (Scenario C) ·
-[[Cloud Subscription Tiers|Cloud-Subscription-Tiers]] ·
-[[Cloud Configuration|Cloud-Configuration]] ·
-[[Cloud Authentication|Cloud-Authentication]].
 
 ---
 
@@ -23,8 +20,9 @@ See also: [[Cloud Deployment|Cloud-Deployment]] (Scenario C) ·
 - **Redemption = quick signup.** A link `…/login?code=…` (or a manual code field)
   → a short form (email + name + password) → a fresh Pro-trial organization. The
   user keeps these credentials and can sign back in throughout the trial.
-- **At expiry = hard delete.** Once `plan_expires_at` passes, the org collapses to
-  the Free plan for access purposes; after the grace period the cleanup cron
+- **At expiry = lockout, then hard delete.** Once `plan_expires_at` passes, every
+  org/project request returns **403** ("trial expired"); `/auth/me` still answers
+  and reports the collapsed `free` plan. After the grace period the cleanup cron
   removes the trial org, its projects/data, its Gitea repos, and the owner account.
 - **Code generation = admin-token API + CLI.** `POST /admin/invites` (header
   `X-Admin-Token`) and `scripts/make_invite.py` for `docker compose exec`.
@@ -182,3 +180,7 @@ On top of a live backend (Scenario B in [[Cloud Deployment|Cloud-Deployment]]):
    time): `NEXT_PUBLIC_USE_MOCK=false`, `NEXT_PUBLIC_AUTH_MODE=dev`,
    `NEXT_PUBLIC_API_BASE_URL=https://<api>`. The default stage is **beta**
    (Beta badge); set `NEXT_PUBLIC_APP_STAGE=live` for GA (badge hidden).
+
+## See also
+
+[[Cloud Deployment|Cloud-Deployment]] (Scenario C) · [[Cloud Subscription Tiers|Cloud-Subscription-Tiers]] · [[Cloud Configuration|Cloud-Configuration]] · [[Cloud Authentication|Cloud-Authentication]]

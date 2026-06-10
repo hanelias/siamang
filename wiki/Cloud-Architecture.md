@@ -59,7 +59,8 @@ the engine is the `siamang.reporting.Report` document submodule.
                                                   │  Sandbox (ephemeral        │
                                                   │  docker container):        │
                                                   │  siamang + plugin,          │
-                                                  │  no secrets, no egress,     │
+                                                  │  no secrets, no egress      │
+                                                  │  (analysis: DB-only net),   │
                                                   │  validate / deploy / run    │
                                                   └───────────────────────────┘
 ```

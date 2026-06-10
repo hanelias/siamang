@@ -61,7 +61,7 @@ CSVWriter().write(data, "out.csv")
 | `CSVWriter.write(data, path, **kwargs)` | `data.frame.to_csv(path, index=False, **kwargs)`; returns `Path`. |
 
 CSV carries data only. To recover labels and missing-value codes, pair the CSV with
-a JSON dictionary (see [Data dictionary](#data-dictionary)):
+a JSON dictionary (see [Data dictionary](#data-dictionary-codebooks)):
 
 ```python
 from siamang.io import CSVReader, DictionaryReader
@@ -101,7 +101,7 @@ SPSSWriter().write(data, "trust_out.sav")
 
 | Class | Behaviour |
 | :--- | :--- |
-| `SPSSReader.read(path, **kwargs)` | Reads via `pyreadstat.read_sav(path, user_missing=True)`. Rebuilds a `VariableMap` from `meta.variable_value_labels`, `meta.variable_labels`, `meta.missing_ranges`, and column dtypes. |
+| `SPSSReader.read(path, **kwargs)` | Reads via `pyreadstat.read_sav(path, user_missing=True)`. Rebuilds a `VariableMap` from `meta.column_names_to_labels`, `meta.variable_value_labels`, `meta.missing_ranges`, and `meta.variable_measure`. |
 | `SPSSWriter.write(data, path, **kwargs)` | Writes via `pyreadstat.write_sav` with variable labels, value labels, missing values, and formats. `data.variables` must be set, or columns are written bare. |
 | `read_spss(path, **kwargs)` | Convenience for `SPSSReader().read(...)`. |
 
@@ -131,7 +131,7 @@ StataWriter().write(data, "trust_out.dta", version=15)
 | Class | Behaviour |
 | :--- | :--- |
 | `StataReader.read(path, **kwargs)` | `pyreadstat.read_dta(path, user_missing=True)` → `SurveyData` with a `VariableMap`. |
-| `StataWriter.write(data, path, version=15, **kwargs)` | `pyreadstat.write_dta` with metadata. `version` selects the file-format version (Stata 12 = 117, 13/14 = 118, ≥15 = 119). |
+| `StataWriter.write(data, path, version=15, **kwargs)` | `pyreadstat.write_dta` with metadata. `version` (default `15`) is forwarded to `pyreadstat.write_dta` as the target Stata version. |
 | `read_stata(path, **kwargs)` | Convenience function. |
 
 Same metadata round-trip as SPSS.
@@ -147,17 +147,20 @@ RScriptWriter().write(data, path="political_trust_R/")
 ```
 
 Writes a three-file bundle into the target directory and returns the `Path` to
-`load_data.R`:
+the R script:
 
-- `data.csv` — the responses;
-- `dictionary.json` — full `VariableMap` serialisation;
-- `load_data.R` — an R script that reads the CSV, applies value labels via
-  `factor(...)` and missing-value codes from `dictionary.json`, and attaches
-  variable labels with `Hmisc::label`.
+- `import_survey.csv` — the responses;
+- `import_survey_dictionary.json` — full `VariableMap` serialisation;
+- `import_survey.R` — an R script that reads the CSV and dictionary (via
+  `jsonlite`), replaces missing-value codes with `NA`, and applies value labels
+  with `factor(...)`, leaving the result in an object named `survey_data`.
+
+If `path` ends in `.R` (e.g. `trust.R`), the files are named after its stem
+instead (`trust.csv`, `trust_dictionary.json`, `trust.R`).
 
 ```r
 # In R:
-source("political_trust_R/load_data.R")   # `data` is now labelled
+source("political_trust_R/import_survey.R")   # builds the labelled `survey_data`
 ```
 
 ---

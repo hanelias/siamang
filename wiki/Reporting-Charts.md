@@ -40,7 +40,7 @@ figure is built lazily on first use.
 | :--- | :--- | :--- |
 | `plot()` | `matplotlib.axes.Axes` | Build and return the Axes for further tweaking. |
 | `show()` | `None` | Display inline (Jupyter) or in a window. |
-| `save(path, dpi=150)` | `Path` | Write to file; creates parent dirs; `bbox_inches="tight"`. |
+| `save(path, dpi=150)` | `Path` | Write to file (the directory must already exist); `bbox_inches="tight"`. |
 
 ---
 
@@ -118,11 +118,11 @@ matrix** of `columns` (using a diverging `RdBu_r` scale centered at 0).
 > `ImportError: seaborn is required for HeatMap` if seaborn is unavailable.
 
 ```python
-# Mean Likert agreement across remote-frequency groups
-data.plot.heatmap(["satisfaction", "autonomy"], by="remote_freq", cmap="Blues").show()
+# Mean autonomy and age across remote-frequency groups
+data.plot.heatmap(["autonomy", "age"], by="remote_freq", cmap="Blues").show()
 
 # Spearman correlation matrix of continuous measures
-data.plot.heatmap(["satisfaction", "autonomy"]).show()
+data.plot.heatmap(["age", "autonomy"]).show()
 ```
 
 ---
@@ -146,7 +146,7 @@ grouping and a linear regression trendline.
   trendline is drawn only when `hue` is `None`.
 
 ```python
-data.plot.scatter("satisfaction", "autonomy", hue="remote_freq").show()
+data.plot.scatter("age", "autonomy", hue="remote_freq").show()
 ```
 
 ---

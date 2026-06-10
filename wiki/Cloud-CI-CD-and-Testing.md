@@ -7,10 +7,6 @@ smoke test in mock mode, brings up the full stack and runs a strict end-to-end
 smoke against it, and builds the Docker images. This page lists the CI jobs and
 shows how to run each check locally.
 
-See also: [[Cloud Data Model and Migrations|Cloud-Data-Model-and-Migrations]] ·
-[[Cloud Web App|Cloud-Web-App]] ·
-[[Cloud Contributing|Cloud-Contributing]].
-
 ---
 
 ## CI jobs
@@ -118,3 +114,7 @@ step still prints diagnostics. The flow:
 
 It prints `SMOKE: OK` and exits 0 when every `check()` passed, otherwise
 `SMOKE: N FAILURE(S)` and exits 1.
+
+## See also
+
+[[Cloud Data Model and Migrations|Cloud-Data-Model-and-Migrations]] · [[Cloud Web App|Cloud-Web-App]] · [[Cloud Contributing|Cloud-Contributing]]

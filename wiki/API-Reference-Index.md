@@ -32,7 +32,7 @@ Re-exported at the top level. Documented in
 | :--- | :--- | :--- | :--- |
 | `Variable` | `from siamang import Variable` | A measured variable: name, scale, labels, valid range. | [[Variables and Measurement\|Variables-and-Measurement]] |
 | `VariableMap` | `from siamang import VariableMap` | An ordered collection of variables — a survey's codebook. | [[Variables and Measurement\|Variables-and-Measurement]] |
-| `VarRef` | `from siamang import VarRef` | A reference to a variable, used when building expressions. | [[Variables and Measurement\|Variables-and-Measurement]] |
+| `VarRef` | `from siamang import VarRef` | A reference to a variable, used when building expressions. | [[Visibility and Branching\|Visibility-and-Branching]] |
 | `MissingValue` | `from siamang import MissingValue` | A declared missing-value code and its kind. | [[Variables and Measurement\|Variables-and-Measurement]] |
 | `Option` | `from siamang import Option` | A single choice option, with optional `show_if`/`hide_if`/`media`. | [[Question Types\|Question-Types]] |
 | `Media` | `from siamang import Media` | An image/audio/video attachment for a question or option. | [[Question Types\|Question-Types]] |
@@ -73,7 +73,7 @@ Re-exported at the top level. Documented in
 
 | Symbol | Import | Description | Docs |
 | :--- | :--- | :--- | :--- |
-| `ValidationIssue` | `from siamang import ValidationIssue` | A structural error raised by `validate()`. | [[Validation and Linting\|Validation-and-Linting]] |
+| `ValidationIssue` | `from siamang import ValidationIssue` | A finding returned by data validation (`SurveyData.validate`). | [[Validation and Linting\|Validation-and-Linting]] |
 | `LintWarning` | `from siamang import LintWarning` | A lint finding (code, severity, message, location). | [[Validation and Linting\|Validation-and-Linting]] |
 
 ---
@@ -129,7 +129,7 @@ Documented in [[Frontend and Theming|Frontend-and-Theming]].
 | `SurveySchema` | `from siamang.frontend import SurveySchema` | Platform-agnostic compiled survey IR. | [[Frontend and Theming\|Frontend-and-Theming]] |
 | `SurveyBundle` | `from siamang.frontend import SurveyBundle` | The compiled files (HTML/CSS/JS) ready to deploy. | [[Frontend and Theming\|Frontend-and-Theming]] |
 | `SurveyJSRuntime` | `from siamang.frontend import SurveyJSRuntime` | The default, build-free SurveyJS runtime. | [[Frontend and Theming\|Frontend-and-Theming]] |
-| `ReactRuntime` | `from siamang.frontend import ReactRuntime` | A standalone React 18 + Tailwind runtime. | [[Frontend and Theming\|Frontend-and-Theming]] |
+| `ReactRuntime` | `from siamang.frontend import ReactRuntime` | A standalone React 18 runtime with a bundled design-system stylesheet. | [[Frontend and Theming\|Frontend-and-Theming]] |
 | `LocalClientTemplate` | `from siamang.frontend import LocalClientTemplate` | `env.js` for the local backend. | [[Frontend and Theming\|Frontend-and-Theming]] |
 | `SupabaseClientTemplate` | `from siamang.frontend import SupabaseClientTemplate` | `env.js` for the Supabase backend. | [[Frontend and Theming\|Frontend-and-Theming]] |
 | `ClientEnv` | `from siamang.frontend import ClientEnv` | Frontend-safe config handed to the in-bundle client. | [[Frontend and Theming\|Frontend-and-Theming]] |
@@ -176,7 +176,7 @@ Readers and writers for the common research formats. Documented in
 | `read_spss` | `from siamang.io import read_spss` | Convenience for `SPSSReader().read(...)`. | [[Data Import and Export\|Data-Import-and-Export]] |
 | `StataReader` / `StataWriter` | `from siamang.io import StataReader, StataWriter` | Stata `.dta` I/O with full metadata. | [[Data Import and Export\|Data-Import-and-Export]] |
 | `read_stata` | `from siamang.io import read_stata` | Convenience for `StataReader().read(...)`. | [[Data Import and Export\|Data-Import-and-Export]] |
-| `RScriptWriter` | `from siamang.io import RScriptWriter` | Write a CSV + dictionary + `load_data.R` bundle. | [[Data Import and Export\|Data-Import-and-Export]] |
+| `RScriptWriter` | `from siamang.io import RScriptWriter` | Write a CSV + dictionary + `import_survey.R` bundle. | [[Data Import and Export\|Data-Import-and-Export]] |
 | `DictionaryReader` / `DictionaryWriter` | `from siamang.io import DictionaryReader, DictionaryWriter` | Read/write a `VariableMap` codebook as JSON. | [[Data Import and Export\|Data-Import-and-Export]] |
 
 All I/O symbols are also re-exported at the top level (`from siamang import

@@ -76,6 +76,9 @@ Rather than setting `kind`/`body`/`redirect_url` by hand, use the factories. Eac
 returns a `Page` with the appropriate `kind` preset; keyword-only arguments keep call
 sites explicit.
 
+> **Note.** The page factories live in `siamang.core` — they are *not* re-exported
+> from the top-level `siamang` namespace, so import them explicitly.
+
 ```python
 def ContentPage(name, *, body, title=None, show_if=None, hide_if=None) -> Page
 def DisqualificationPage(name, *, title=None, body=None, redirect_url=None,
@@ -94,21 +97,21 @@ def RedirectPage(name, *, redirect_url, title=None, body=None,
 | `RedirectPage` | `"redirect"` | `redirect_url` |
 
 ```python
-import siamang as sg
+from siamang.core import ContentPage, DisqualificationPage, FinalPage, RedirectPage
 
-intro = sg.ContentPage("intro", body="<p>Welcome to the study.</p>")
+intro = ContentPage("intro", body="<p>Welcome to the study.</p>")
 
-dq = sg.DisqualificationPage(
+dq = DisqualificationPage(
     "dq", title="Sorry", body="<p>You are not eligible.</p>",
     show_if=age.lt(18),                      # gate the screen-out
 )
 
-done = sg.FinalPage(
+done = FinalPage(
     "done", title="Thanks", body="<p>Thank you for participating.</p>",
     redirect_url="https://panel.example.com/done", redirect_delay=3,
 )
 
-rd = sg.RedirectPage("rd", redirect_url="https://panel.example.com/complete")
+rd = RedirectPage("rd", redirect_url="https://panel.example.com/complete")
 
 # is_terminal reflects the kind
 intro.is_terminal     # False
@@ -207,6 +210,7 @@ variables, and scripts that target real questions or pages.
 
 ```python
 import siamang as sg
+from siamang.core import ContentPage, DisqualificationPage, FinalPage
 
 age = sg.Variable("age", scale="ratio", label="Age")
 trust = sg.Variable("trust", scale="ordinal", label="Trust",
@@ -215,7 +219,7 @@ trust = sg.Variable("trust", scale="ordinal", label="Trust",
 survey = sg.Questionnaire(
     title="Political Trust — 2026",
     pages=[
-        sg.ContentPage("welcome", body="<p>Welcome.</p>"),
+        ContentPage("welcome", body="<p>Welcome.</p>"),
         sg.Page(
             name="main",
             title="About you",
@@ -225,8 +229,8 @@ survey = sg.Questionnaire(
                                var=trust, points=5),
             ],
         ),
-        sg.DisqualificationPage("dq", body="<p>Not eligible.</p>", show_if=age.lt(18)),
-        sg.FinalPage("done", title="Thanks", body="<p>Thank you.</p>"),
+        DisqualificationPage("dq", body="<p>Not eligible.</p>", show_if=age.lt(18)),
+        FinalPage("done", title="Thanks", body="<p>Thank you.</p>"),
     ],
 )
 

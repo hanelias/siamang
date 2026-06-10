@@ -107,6 +107,8 @@ Writes the document, choosing the format from the file suffix: `.md`/`.markdown`
 
 ## Fluent example: narrative + table + chart
 
+The example assumes the simulated `data` from [[Analysis]] (n=200, seed=123).
+
 ```python
 from siamang.reporting import Report
 
@@ -136,13 +138,13 @@ The Markdown begins:
 
 Perceived autonomy was measured on a 5-point scale.
 
-**Respondents:** 102
+**Respondents:** 200
 
 *Table 1. Mean autonomy by remote frequency*
 
 | Remote Frequency | Mean | SD | Median | N |
 |---|---|---|---|---|
-| Never | 2.92 | 1.382 | 3.0 | 25 |
+| Never | 3.222 | 1.38 | 4.0 | 45 |
 ...
 
 > **Note:** Non-consenting respondents were excluded from the base.

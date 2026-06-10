@@ -3,10 +3,6 @@
 This page covers the branching workflow, local development setup, and the code
 style / tooling used for `siamang_cloud`.
 
-See also: [[Cloud Quick Start|Cloud-Quick-Start]] ·
-[[Cloud CI CD and Testing|Cloud-CI-CD-and-Testing]] ·
-[[Cloud Architecture|Cloud-Architecture]].
-
 ---
 
 ## Branching workflow
@@ -127,3 +123,7 @@ see [[Cloud CI CD and Testing|Cloud-CI-CD-and-Testing]].
 - CI must be green: lint, types, all test suites, migrations, the web build, both
   smoke jobs, and the image builds.
 - Delete the branch after the PR merges.
+
+## See also
+
+[[Cloud Quick Start|Cloud-Quick-Start]] · [[Cloud CI CD and Testing|Cloud-CI-CD-and-Testing]] · [[Cloud Architecture|Cloud-Architecture]]

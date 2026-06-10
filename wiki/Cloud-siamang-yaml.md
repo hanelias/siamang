@@ -1,6 +1,6 @@
 # Project Config (siamang.yaml)
 
-Every Siamang Cloud project has a `siamang.yaml` at the repository root. It wires
+Every siamang Cloud project has a `siamang.yaml` at the repository root. It wires
 the project together: where the survey lives, which deployment environments
 exist, what analysis scripts to run, the sandbox runtime, and where reports go.
 It is committed to the repo (every push is validated), and the platform reads it

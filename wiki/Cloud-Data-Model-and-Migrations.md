@@ -13,10 +13,6 @@ Schema changes to the platform layer are managed with **Alembic**; the per-proje
 schemas are created at runtime by the API, not by migrations. This page documents
 both layers, how RLS is enforced, and what each migration (001–012) adds.
 
-See also: [[Cloud Domain Model|Cloud-Domain-Model]] ·
-[[Cloud Sandbox and Security|Cloud-Sandbox-and-Security]] ·
-[[Cloud Configuration|Cloud-Configuration]].
-
 ---
 
 ## Platform schema (`public.*`)
@@ -38,7 +34,7 @@ application layer.
 | `audit_log` | Append-only per-org activity (`action`, `target`, `meta_json`). | **Yes** |
 | `survey_registry` | Maps a public `survey_id` → project schema for Ingest. | — (the `survey_id` is the capability) |
 | `api_keys` | Personal `sck_…` tokens (`token_prefix`, `token_hash`, `revoked`, `expires_at`). | — |
-| `schedules` | Cron-scheduled runs (`kind`, `script_name`, `cron`, `branch`, `enabled`). | **Yes** (added in 001's RLS set? see note) |
+| `schedules` | Cron-scheduled runs (`kind`, `script_name`, `cron`, `branch`, `enabled`). | — (app-gated; worker reads across orgs) |
 | `webhook_endpoints` | Outgoing org webhooks (`url`, `secret`, `events`). | — |
 | `plan_tiers` | Reference copy of plan caps/features for ops visibility. | — |
 | `project_secrets` | Fernet-encrypted per-project credentials (`key`, `value_encrypted`). | **Yes** |
@@ -170,3 +166,7 @@ alembic downgrade base    # roll everything back (CI verifies both directions)
 
 CI runs migration apply/rollback against a real Postgres in the `migrations` job —
 see [[Cloud CI CD and Testing|Cloud-CI-CD-and-Testing]].
+
+## See also
+
+[[Cloud Domain Model|Cloud-Domain-Model]] · [[Cloud Sandbox and Security|Cloud-Sandbox-and-Security]] · [[Cloud Configuration|Cloud-Configuration]]

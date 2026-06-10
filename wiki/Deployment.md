@@ -220,7 +220,7 @@ assert frontend.token == "nfp_..."
 ## `DeployPipeline` — the orchestrator
 
 ```python
-@dataclass(frozen=True, slots=True)
+@dataclass(slots=True)
 class DeployPipeline:
     backend: BackendAdapter
     frontend: FrontendAdapter

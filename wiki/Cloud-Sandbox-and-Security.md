@@ -9,11 +9,6 @@ unprivileged user. This page documents that sandbox plus the surrounding securit
 controls: scoped per-project database roles, Fernet-encrypted project secrets,
 secure-config enforcement at startup, audit logging, and rate limiting.
 
-See also: [[Cloud Architecture|Cloud-Architecture]] ·
-[[Cloud Survey Lifecycle|Cloud-Survey-Lifecycle]] ·
-[[Cloud Data Model and Migrations|Cloud-Data-Model-and-Migrations]] ·
-[[Cloud Configuration|Cloud-Configuration]].
-
 ---
 
 ## The sandbox container
@@ -289,4 +284,8 @@ Configured limiters (all fixed-window; see [[Cloud Configuration|Cloud-Configura
 To stop one analysis script from filling the disk or object storage, the worker
 caps the artifacts it collects from a sandbox run after it finishes (worker
 `config.py`): `OUTPUTS_MAX_FILES` (default **50**) and `OUTPUTS_MAX_TOTAL_MB`
-(default **200**). Files beyond these limits are skipped and noted in the run log.
+(default **200**). Files beyond these limits are skipped.
+
+## See also
+
+[[Cloud Architecture|Cloud-Architecture]] · [[Cloud Survey Lifecycle|Cloud-Survey-Lifecycle]] · [[Cloud Data Model and Migrations|Cloud-Data-Model-and-Migrations]] · [[Cloud Configuration|Cloud-Configuration]]

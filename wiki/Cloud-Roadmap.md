@@ -7,10 +7,6 @@ the product to a commercial shape, and the Beta-2 hardening pass. It is a
 high-level roadmap; the canonical detail lives in `DEVELOPMENT_PLAN.md`,
 `FEATURE_PASS.md`, and `BETA2_ROADMAP.md`.
 
-See also: [[Cloud Architecture|Cloud-Architecture]] ·
-[[Cloud Subscription Tiers|Cloud-Subscription-Tiers]] ·
-[[Cloud CI CD and Testing|Cloud-CI-CD-and-Testing]].
-
 ---
 
 ## Planning principles
@@ -185,3 +181,7 @@ CHANGELOG + tag).
 **Consciously out of beta-2:** Stripe live payments; the SSO login flow; connector
 execution (S3/BQ/Sheets…); the AI assistant (removed); email/SMTP; i18n; PDF report
 rendering; the self-hosted build.
+
+## See also
+
+[[Cloud Architecture|Cloud-Architecture]] · [[Cloud Subscription Tiers|Cloud-Subscription-Tiers]] · [[Cloud CI CD and Testing|Cloud-CI-CD-and-Testing]]

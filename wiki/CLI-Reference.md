@@ -52,10 +52,18 @@ Runs `survey.validate(strict=...)` then `survey.lint()` and prints each warning 
 $ siamang validate my_survey.py
 OK — no warnings.
 
-$ siamang validate my_survey.py --strict
-[warning] [W201] Question 'q_age' has no label (q_age)
-[error] [E110] show_if references unknown variable 'regon' (page: demographics)
+$ siamang validate draft_survey.py
+[warning] [EMPTY_PAGE] Page 'consent' has no items. (consent)
+
+$ siamang validate draft_survey.py --strict
+validation error: Strict questionnaire validation failed: EMPTY_PAGE, CATEGORICAL_WITHOUT_LABELS
+
+$ siamang validate broken_survey.py   # show_if references a typo'd variable
+validation error: Page 'demographics' show_if references unknown variables: regon
 ```
+
+Structural problems — including expressions that reference unknown variables —
+surface as a `validation error: …` line with exit code 2, not as lint output.
 
 ---
 
@@ -159,10 +167,10 @@ $ siamang init
 siamang init — interactive setup
 Target: /home/you/.siamang.toml
 Default backend (local/supabase) [local]: supabase
+Default frontend (local/vercel) [local]: vercel
 Supabase URL: https://abcdef.supabase.co
 Supabase anon_key:
 Supabase service_key:
-Default frontend (local/vercel) [local]: vercel
 Vercel token:
 Vercel team_id (optional):
 

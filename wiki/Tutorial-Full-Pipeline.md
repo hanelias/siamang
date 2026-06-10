@@ -13,7 +13,10 @@ The example folder contains:
 | :--- | :--- |
 | `full_pipeline_demo.ipynb` | The notebook this tutorial follows, with all outputs. |
 | `survey_preview.html` | A standalone SurveyJS render — open it in a browser to experience the survey. |
-| `survey_responses.db` | A SQLite store with 250 simulated responses, exactly as a local deployment produces. |
+
+Running the notebook also produces local artifacts (a `survey_responses.db` SQLite
+store, figure PNGs, a banner XLSX); these are git-ignored, so they are not shipped
+in the folder.
 
 ---
 

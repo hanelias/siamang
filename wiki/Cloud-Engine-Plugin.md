@@ -9,7 +9,7 @@ builder, the sandbox-side `build_bundle()` helper, and the `siamang.yaml` parser
 
 ```python
 from siamang_cloud_engine import (
-    PlatformBackend,        # implements siamang.deploy.base.BackendAdapter
+    PlatformBackend,        # targets the siamang.deploy.base.BackendAdapter seam (plain class until Service Integration)
     PlatformClientTemplate, # implements siamang.frontend.client.base.BackendClientTemplate
     Report,                 # composable report document (re-exported by the SDK)
     ProjectConfig, load_config, parse_config,   # siamang.yaml parsing
@@ -117,7 +117,9 @@ sandbox; see [[Cloud Survey Lifecycle|Cloud-Survey-Lifecycle]].
 `Report` is a composable document (narrative + tables + charts → Markdown/HTML)
 that orchestrates the engine's existing `siamang.reporting` tables and charts.
 It lives here so it is buildable in this repo, and the SDK re-exports it as
-`from siamang_cloud import Report`. Every builder method returns `self` for
+`from siamang_cloud import Report`. The canonical `Report` now lives in the
+engine itself as `siamang.reporting.Report`; the plugin/SDK version is the same
+builder, re-exported for cloud analysis scripts. Every builder method returns `self` for
 fluent chaining; `save()` is the terminal call. `Report.combine(...)` merges
 several reports into one with a table of contents — that is how **Run all**
 produces a single document. Full method reference: [[Report Document|Report-Document]].

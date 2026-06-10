@@ -47,6 +47,9 @@ ruff format --check .        # formatting (no changes applied)
 mypy siamang                 # static type checking
 ```
 
+Note that in CI, `mypy` runs with `continue-on-error` — it is advisory for now and
+does not fail the build.
+
 To auto-fix formatting and lint issues locally:
 
 ```bash

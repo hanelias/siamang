@@ -47,7 +47,7 @@ entries).
 | `label` | `str \| None` | `None` | Human-readable variable label (used as the SPSS/Stata variable label). |
 | `labels` | `dict[Any, str]` | `{}` | `{code: label}` value labels for nominal/ordinal variables. |
 | `missing_values` | `tuple[Any, ...]` | `()` | Legacy plain codes treated as missing. Normalized into `missing`. |
-| `dtype` | `str \| None` | `None` | Physical type: `"int"`, `"float"`, `"str"`, `"bool"`, `"category"`, `"datetime"`. Inferred during validation if omitted. |
+| `dtype` | `str \| None` | `None` | Physical type: `"int"`, `"float"`, `"str"`, `"bool"`, `"category"`, `"datetime"`. If omitted, the dtype check is simply skipped during validation. |
 | `role` | `str \| None` | `None` | Analytical role: `"input"`, `"target"`, `"weight"`, `"id"`, `"grouping"`, `"derived"`. |
 | `description` | `str \| None` | `None` | Long-form description of what the variable measures. |
 | `construct` | `str \| None` | `None` | Latent construct being measured (e.g. `"trust_in_institutions"`). |

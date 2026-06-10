@@ -7,11 +7,6 @@ response database, dashboards with charts, analysis runs, files, team and settin
 It is the wrapper over the Stage 1–4 API and can run either against a live backend
 or entirely on in-memory fixtures.
 
-See also: [[Cloud Quick Start|Cloud-Quick-Start]] (how to run it) ·
-[[Cloud REST API|Cloud-REST-API]] ·
-[[Cloud Configuration|Cloud-Configuration]] ·
-[[Cloud Deployment|Cloud-Deployment]].
-
 ---
 
 ## Stack
@@ -110,7 +105,7 @@ tabs. **Schedules** (cron runs) live here behind the `schedules` plan gate.
 
 ### Database
 Browse a project's tables. A **Data** tab (paginated, sortable preview rows) and a
-**Schema** tab (column metadata), plus **export** to CSV/XLSX/SAV/Parquet/JSON and
+**Schema** tab (column metadata), plus **export** to CSV/XLSX/SAV/Parquet/SQLite and
 single-response **delete** (GDPR erasure).
 
 ### Dashboard
@@ -189,3 +184,7 @@ For a live backend, set `NEXT_PUBLIC_USE_MOCK=false` and `NEXT_PUBLIC_API_BASE_U
 (or use the Next proxy via `API_PROXY_TARGET`). The full local run is in
 [[Cloud Quick Start|Cloud-Quick-Start]]; deployment options are in
 [[Cloud Deployment|Cloud-Deployment]].
+
+## See also
+
+[[Cloud Quick Start|Cloud-Quick-Start]] (how to run it) · [[Cloud REST API|Cloud-REST-API]] · [[Cloud Configuration|Cloud-Configuration]] · [[Cloud Deployment|Cloud-Deployment]]

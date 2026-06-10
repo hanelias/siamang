@@ -201,16 +201,18 @@ verbatim and sent to the frontend, but are **not** evaluated in Python:
 sg.Page("adults", items=[...], show_if="age >= 18")
 ```
 
-`Questionnaire.validate()` still checks that the variable tokens (`{name}` or bare
-names) in a string gate reference known variables.
+`Questionnaire.validate()` still checks that `{name}` tokens in a string gate
+reference known variables — bare names (like the `age` above) are not extracted
+or checked.
 
 ## Evaluation and serialization
 
 Typed expressions are the recommended form because they:
 
 - are **type-checked** at construction;
-- can be **evaluated in Python** — `simulate()`, `validate()`, and the React
-  runtime's client-side evaluator all use `Expression.evaluate`;
+- can be **evaluated in Python** — `Expression.evaluate` backs `simulate()` and
+  `validate()`; the React runtime evaluates the *same* serialized expression tree
+  client-side (in JavaScript);
 - **serialize losslessly** to JSON via `to_dict()` / `from_dict()` and compile to a
   SurveyJS string via `to_surveyjs()`.
 

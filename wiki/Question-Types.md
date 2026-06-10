@@ -48,7 +48,7 @@ class Question:
 | `randomize` | `bool` | `False` | Shuffle the answer choices. |
 | `other_specify` | `bool` | `False` | Add an "Other (please specify)" free-text choice. |
 | `tag` | `str \| list[str] \| None` | `None` | Tag(s) for categorization/filtering. |
-| `id` | `str \| None` | `None` | Explicit question id; defaults to the variable name. |
+| `id` | `str \| None` | `None` | Explicit question id; defaults to the variable name — except for `Matrix` and wide-mode `MultiChoice`, where the fallback is `matrix_<first var>` / `multi_<first var>`. |
 | `name` | `str \| None` | `None` | Output column name; defaults to the id. |
 | `media` | `Media \| list[Media] \| None` | `None` | Image/video/audio attached to the prompt. |
 | `metadata` | `dict[str, Any]` | `{}` | Free-form extra parameters. |

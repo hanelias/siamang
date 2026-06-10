@@ -139,7 +139,8 @@ the full-pipeline example uses to produce a standalone `.html` file.
 
 ### `ReactRuntime`
 
-Compiles the questionnaire into a standalone **React 18 + Tailwind** application.
+Compiles the questionnaire into a standalone **React 18** application with a
+bundled design-system stylesheet.
 Required for advanced interactive features (custom charts, custom widgets, complex
 animations). Because it needs the live questionnaire, pass `survey=` to `build(...)`.
 `siamang preview` uses the React runtime locally.

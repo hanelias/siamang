@@ -109,8 +109,8 @@ survey.deploy(backend="supabase", frontend="vercel", quota=quotas)
 ### Tightening a cell between deploys
 
 Quotas live in the deploy call, so adjusting a `limit` is just a code change followed
-by another deploy. siamang reprovisions only when the schema hash changes, so updating
-a limit is a cheap operation:
+by another deploy. Note that each deploy provisions a **new survey instance** with
+fresh quota counters — counts do not carry over from the previous deployment:
 
 ```python
 quotas = [
@@ -120,9 +120,10 @@ quotas = [
 survey.deploy(backend="supabase", frontend="vercel", quota=quotas)
 ```
 
-> **Backend support.** Server-side quota enforcement requires a stateful backend
-> (e.g. Supabase). The `local` SQLite backend is for development and preview; consult
-> [[Deployment]] for which backends enforce quotas in production.
+> **Backend support.** All bundled backends enforce quotas server-side — including
+> the `local` SQLite backend, which keeps atomic quota counters. The difference is
+> reachability: `local` is not publicly accessible, so use it for development and
+> preview; consult [[Deployment]] for production backends.
 
 ## See also
 

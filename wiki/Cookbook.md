@@ -47,6 +47,9 @@ q_color = sg.SingleChoice(
 ### Composite conditions
 
 ```python
+region = sg.Variable("region", scale="nominal", labels={1: "Capital", 2: "North"})
+party  = sg.Variable("party", scale="nominal")
+
 gate = sg.AND(
     age.ge(18),
     sg.OR(region.eq(1), region.eq(2)),
@@ -79,8 +82,8 @@ quotas = [
 survey.deploy(backend="supabase", frontend="vercel", quota=quotas)
 ```
 
-Updating a `limit` between deploys is cheap — siamang reprovisions only when the
-schema hash changes.
+Updating a `limit` is just a code change followed by another deploy — but note that
+each deploy provisions a new survey instance with fresh quota counters.
 
 ---
 
@@ -170,24 +173,23 @@ match   = sg.Script.validate_fields_match("email_1", "email_2",
 survey = sg.Questionnaire(title="…", pages=[...], scripts=[shuffle, timer, match])
 ```
 
-A custom snippet sees `answers`, `utils` (shuffle, sample, clamp, now, formatDate),
-`api` (get, post), and `context`:
+A custom snippet sees `answers`, `utils` (shuffle, sample, clamp, now, formatDate,
+debounce), `api` (get, post), and `context` — the static dict you set on the
+`Script` itself (the runtime injects nothing else into it):
 
 ```python
-log_dwell = sg.Script(
-    name="log_dwell",
+log_exit = sg.Script(
+    name="log_exit",
     trigger="onPageExit",
+    context={"survey_id": "trust-2026", "endpoint": "/diagnostics"},
     code="""
-        const entered = context.entered ?? Date.now();
-        const dwell_ms = Date.now() - entered;
-        api.post('/diagnostics', {
+        api.post(context.endpoint, {
             survey_id: context.survey_id,
-            page: context.page_name,
-            dwell_ms,
+            left_at: utils.now(),
         });
     """,
 )
-survey = sg.Questionnaire(title="…", pages=[...], scripts=[log_dwell])
+survey = sg.Questionnaire(title="…", pages=[...], scripts=[log_exit])
 ```
 
 ---
@@ -274,8 +276,8 @@ SPSSWriter().write(data, "output.sav")                          # opens in SPSS 
 from siamang.io import RScriptWriter
 
 RScriptWriter().write(data, path="political_trust_R/")
-# Writes data.csv, dictionary.json, load_data.R. Then in R:
-#   source("political_trust_R/load_data.R")
+# Writes import_survey.csv, import_survey_dictionary.json, import_survey.R. Then in R:
+#   source("political_trust_R/import_survey.R")   # builds the `survey_data` data frame
 ```
 
 ### CSV with a separate dictionary

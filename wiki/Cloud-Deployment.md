@@ -15,11 +15,6 @@ very different hosting needs.
 > (Postgres/Redis/Gitea/MinIO), and a long-running worker — none of which are
 > serverless. For the backend, use a VPS.
 
-See also: [[Cloud Quick Start|Cloud-Quick-Start]] ·
-[[Cloud Configuration|Cloud-Configuration]] ·
-[[Cloud Sandbox and Security|Cloud-Sandbox-and-Security]] ·
-[[Cloud Self-Hosted Trials|Cloud-Self-Hosted-Trials]].
-
 ---
 
 ## Scenario A — frontend-only demo (mock mode)
@@ -296,3 +291,7 @@ headers (`X-Content-Type-Options`, `X-Frame-Options: SAMEORIGIN`,
 `Referrer-Policy`, `Strict-Transport-Security`). Routing serves each bundle's
 `index.html` as the SPA fallback, long-caches fingerprinted assets (`max-age=31536000, immutable`),
 leaves the HTML entry uncached, and exposes `/healthz`.
+
+## See also
+
+[[Cloud Quick Start|Cloud-Quick-Start]] · [[Cloud Configuration|Cloud-Configuration]] · [[Cloud Sandbox and Security|Cloud-Sandbox-and-Security]] · [[Cloud Self-Hosted Trials|Cloud-Self-Hosted-Trials]]

@@ -12,10 +12,6 @@ applied when the variable is unset. The **Change for prod?** column flags values
 that *must* be changed away from their development defaults for a client-facing
 deploy — three of them are enforced at startup (see [Secure config](#secure-config-must-change-for-production)).
 
-See also: [[Cloud Deployment|Cloud-Deployment]] ·
-[[Cloud Sandbox and Security|Cloud-Sandbox-and-Security]] ·
-[[Cloud Quick Start|Cloud-Quick-Start]].
-
 ---
 
 ## Database
@@ -108,7 +104,7 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 | `SURVEYS_ROOT` | Where the deploy worker writes survey bundles (shared volume with nginx). | `/srv/surveys` | No |
 | `DEPLOY_STUCK_MINUTES` | A deploy/preview left in `queued`/`building` beyond this many minutes is reaped to `failed`. Comfortably above `SANDBOX_TIMEOUT`. | `15` | Optional |
 | `PREVIEW_TTL_DAYS` | Staging preview bundles (`preview/<project>/<sha>/`) are purged after this many days. | `7` | Optional |
-| `OUTPUTS_MAX_FILES` | Max number of files collected from a sandbox `/out` run; the rest are skipped (and logged). | `50` | Optional |
+| `OUTPUTS_MAX_FILES` | Max number of files collected from a sandbox `/out` run; the rest are skipped. | `50` | Optional |
 | `OUTPUTS_MAX_TOTAL_MB` | Max total size (MB) of collected run outputs. | `200` | Optional |
 
 Generate `SANDBOX_DB_SECRET` with `openssl rand -hex 32`.
@@ -158,7 +154,7 @@ See [[Cloud Subscription Tiers|Cloud-Subscription-Tiers]] for the plan matrix.
 | `ADMIN_TOKEN` | Gates the `/admin` invite API via the `X-Admin-Token` header. **Empty disables the admin API entirely** (every call 403s), so the demo ships closed by default. | *(empty)* | For invite trials (enforced ≥32 chars when set) |
 | `WEB_BASE_URL` | Public URL of the web app; used to build invite redeem links (`…/login?code=…`) and to derive CORS. | `http://localhost:3000` | **Yes** |
 | `TRIAL_DEFAULT_DAYS` | Fallback trial length (days) when a minted invite code omits one. | `14` | Optional |
-| `TRIAL_GRACE_DAYS` | Grace period (days) an expired trial org keeps its data before the cleanup cron hard-deletes it (the API downgrades access to Free immediately on expiry). | `3` (worker) | Optional |
+| `TRIAL_GRACE_DAYS` | Grace period (days) an expired trial org keeps its data before the cleanup cron hard-deletes it (on expiry the API immediately locks the org out — 403 on every org/project request; only `/auth/me` still answers, reporting the collapsed `free` plan). | `3` (worker) | Optional |
 
 See [[Cloud Self-Hosted Trials|Cloud-Self-Hosted-Trials]] for the invite system.
 
@@ -224,3 +220,7 @@ Beyond those, change `POSTGRES_PASSWORD`, `MINIO_ACCESS_KEY`/`MINIO_SECRET_KEY`,
 `SURVEYS_BASE_URL`, `WEB_BASE_URL`) before exposing the stack. Set
 `SANDBOX_DB_SECRET` and a real `SANDBOX_NETWORK` if you want live analysis DB
 access.
+
+## See also
+
+[[Cloud Deployment|Cloud-Deployment]] · [[Cloud Sandbox and Security|Cloud-Sandbox-and-Security]] · [[Cloud Quick Start|Cloud-Quick-Start]]

@@ -56,13 +56,13 @@ print(data.report.freq("it_role").to_markdown())
 ```text
 | Value | Label | N | % | Cumulative % |
 |---|---|---|---|---|
-| 1.0 | Engineer | 37 | 33.9 | 33.9 |
-| 2.0 | Data Scientist | 27 | 24.8 | 58.7 |
-| 3.0 | DevOps | 23 | 21.1 | 79.8 |
-| 4.0 | PM | 22 | 20.2 | 100.0 |
-|  | Total | 109 | 100.0 | 100.0 |
+| 1 | Engineer | 58 | 29.0 | 29.0 |
+| 2 | Data Scientist | 47 | 23.5 | 52.5 |
+| 3 | DevOps | 43 | 21.5 | 74.0 |
+| 4 | PM | 52 | 26.0 | 100.0 |
+|  | Total | 200 | 100.0 | 100.0 |
 
-Variable = IT Role; N valid = 109
+Variable = IT Role; N valid = 200
 ```
 
 ---
@@ -93,13 +93,13 @@ print(data.report.crosstab("it_role", "remote_freq", pct="row").to_markdown())
 ```text
 | IT Role | Never | Occasionally | Hybrid | Mostly remote | Fully remote | Total |
 |---|---|---|---|---|---|---|
-| Engineer | 14.3 | 28.6 | 25.0 | 21.4 | 10.7 | 28 |
-| Data Scientist | 25.0 | 15.0 | 15.0 | 20.0 | 25.0 | 20 |
-| DevOps | 23.1 | 11.5 | 19.2 | 15.4 | 30.8 | 26 |
-| PM | 35.7 | 14.3 | 14.3 | 10.7 | 25.0 | 28 |
-| Total | 25.0 | 18.0 | 19.0 | 17.0 | 23.0 | 102 |
+| Engineer | 17.2 | 19.0 | 27.6 | 20.7 | 15.5 | 58 |
+| Data Scientist | 19.1 | 10.6 | 17.0 | 21.3 | 31.9 | 47 |
+| DevOps | 27.9 | 32.6 | 20.9 | 7.0 | 11.6 | 43 |
+| PM | 26.9 | 17.3 | 30.8 | 11.5 | 13.5 | 52 |
+| Total | 45.0 | 39.0 | 49.0 | 31.0 | 36.0 | 200 |
 
-χ² = 10.1760; df = 12; p = 0.6006; Cramér's V = 0.1820; N = 102
+χ² = 21.4850; df = 12; p = 0.0437; Cramér's V = 0.1890; N = 200
 ```
 
 ---
@@ -133,13 +133,13 @@ print(data.report.means("autonomy", by="remote_freq").to_markdown())
 ```text
 | Remote Frequency | Mean | SD | Median | N |
 |---|---|---|---|---|
-| Never | 3.696 | 1.329 | 4.0 | 23 |
-| Occasionally | 2.167 | 1.467 | 2.0 | 12 |
-| Hybrid | 2.9 | 1.296 | 3.0 | 30 |
-| Mostly remote | 2.677 | 1.492 | 3.0 | 31 |
-| Fully remote | 3.0 | 1.581 | 3.0 | 13 |
+| Never | 3.222 | 1.38 | 4.0 | 45 |
+| Occasionally | 2.923 | 1.458 | 3.0 | 39 |
+| Hybrid | 2.898 | 1.447 | 3.0 | 49 |
+| Mostly remote | 3.0 | 1.653 | 2.0 | 31 |
+| Fully remote | 3.278 | 1.386 | 4.0 | 36 |
 
-Kruskal-Wallis H = 10.5250; p = 0.0324; N = 109; Variable = Autonomy
+Kruskal-Wallis H = 2.1330; p = 0.7113; N = 200; Variable = Autonomy
 ```
 
 Here `autonomy` is ordinal and `remote_freq` has five categories, so
@@ -176,7 +176,7 @@ table = data.report.crosstab("it_role", "remote_freq", pct="row")
 frame = table.to_frame()            # pandas DataFrame
 md    = table.to_markdown()         # str (with stats footer)
 html  = table.to_html()            # str
-path  = table.export_xlsx("out/crosstab.xlsx")   # Path; creates parent dirs
+path  = table.export_xlsx("crosstab.xlsx")   # Path (the directory must already exist)
 ```
 
 To assemble several tables and charts into one narrative document, drop them

@@ -138,7 +138,7 @@ hello.py
 
 ## See also
 
-- [[Core Concepts|Core-Concepts]] — the data model behind these five layers.
+- [[Core Concepts|Core-Concepts]] — the data model behind these four layers (plus the optional `Block`).
 - [[Variables and Measurement|Variables-and-Measurement]] — everything a `Variable` carries.
 - [[Question Types|Question-Types]] — all seven question types.
 - [[Pages Blocks and Structure|Pages-Blocks-and-Structure]] — pages, blocks, and questionnaires.

@@ -65,7 +65,7 @@ siamang deploy   my_survey.py --backend supabase --frontend vercel
 | **Scripts** | Inline JavaScript for survey-side behaviour — 7 trigger points |
 | **Frontend** | SurveyJS and React 18 runtimes, dark mode, auto-save, access codes, 6 theme presets |
 | **Deploy** | Local SQLite, Supabase, Google Sheets backends; Local, Vercel, Netlify frontends |
-| **Data I/O** | CSV, Excel, SPSS, Stata, R — round-trip with labels and missing values preserved |
+| **Data I/O** | CSV, Excel, SPSS, Stata, R — SPSS/Stata round-trip labels and missing values; CSV/Excel carry data only (labels via the JSON dictionary) |
 | **Cloud** | Git-backed projects, sandboxed deploy, public ingest API, dashboards, scheduled analysis, reports, multi-tenant RLS, subscription tiers |
 
 ---

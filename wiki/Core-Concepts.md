@@ -142,8 +142,9 @@ sg.AND(age.ge(18), gender.eq(2), region.isin([1, 2]))
 ```
 
 The typed form is preferred because it is **type-checked** at construction, can be
-**evaluated in Python** (which is what `simulate()`, `validate()`, and the React
-runtime's client-side evaluator all rely on), and serializes losslessly to JSON. A
+**evaluated in Python** (which backs `simulate()` and `validate()`; the React
+runtime evaluates the same serialized expression tree client-side, in JavaScript),
+and serializes losslessly to JSON. A
 visibility gate (`show_if` / `hide_if`) can attach to a `Page`, `Block`, `Question`,
 or `Option`; questions additionally support `skip_to`, and pages support `next_if`
 routing. A `str` in the SurveyJS dialect (`"age >= 18"`) is also accepted and

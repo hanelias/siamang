@@ -15,10 +15,6 @@ limits, and gated features. There are four tiers: **Free**, **Plus**, **Pro**, a
 > The values below are taken from `limits.py` (the authoritative source). Where
 > the prose docs differ, see the [note on the AI feature](#a-note-on-the-ai-assistant).
 
-See also: [[Cloud Self-Hosted Trials|Cloud-Self-Hosted-Trials]] ·
-[[Cloud Connectors|Cloud-Connectors]] ·
-[[Cloud Configuration|Cloud-Configuration]].
-
 ---
 
 ## Plans at a glance
@@ -56,9 +52,9 @@ capabilities on every plan:
 - **Deployments** — publish a survey to an environment, get a hosted survey URL,
   collect responses.
 - **Response database** — browse responses, view table schemas, export to
-  CSV/XLSX/SAV/Parquet/JSON.
+  CSV/XLSX/SAV/Parquet/SQLite.
 - **Analysis & reports** — run analysis scripts and generate reports (Markdown /
-  HTML / PDF).
+  HTML; PDF planned).
 - **Files** — repository outputs plus uploaded assets and exports.
 - **Team** — invite members and assign roles (`owner` / `admin` / `member`).
 - **Developer access** — personal API keys (`sck_…` bearer tokens) and SSH keys.
@@ -162,3 +158,7 @@ Three independent dimensions control access — don't conflate them:
    **cooperative** (can invite teammates and manage roles). Independent of the
    tier; switching a cooperative back to personal removes all members except the
    owner.
+
+## See also
+
+[[Cloud Self-Hosted Trials|Cloud-Self-Hosted-Trials]] · [[Cloud Connectors|Cloud-Connectors]] · [[Cloud Configuration|Cloud-Configuration]]

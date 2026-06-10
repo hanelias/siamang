@@ -94,7 +94,7 @@ class LintWarning:
 | `EMPTY_QUESTIONNAIRE` | warning | No pages and no blocks. |
 | `EMPTY_PAGE` | warning (error in strict) | A page has no items. |
 | `REDUNDANT_NAVIGATION` | warning | `default_next` duplicates the implicit next page. |
-| `MISSING_NAVIGATION` | warning | A non-terminal page has no outgoing navigation edges. |
+| `MISSING_NAVIGATION` | warning | Any page other than the last one has no outgoing navigation edges. |
 
 ### Extra `strict` checks
 

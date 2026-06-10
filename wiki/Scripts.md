@@ -61,20 +61,21 @@ Inside a snippet you have these globals:
   runtime understands include `answers.__options__[qid]` (per-question option order),
   `answers.__pages__` (page order), `answers.__errors__[field]` (validation messages),
   and `answers.__timers__` (timer handles).
-- **`utils`** — helper functions: `shuffle`, `sample`, `clamp`, `now`, `formatDate`.
+- **`utils`** — helper functions: `shuffle`, `sample`, `clamp`, `debounce`, `now`,
+  `formatDate`.
 - **`api`** — `{ get, post }` for external HTTP calls.
-- **`context`** — the static `context` dict you passed on the `Script`, plus runtime
-  values such as `context.page_name`.
+- **`context`** — exactly the static `context` dict you passed on the `Script`;
+  the runtime injects nothing else into it.
 
 ```python
 import siamang as sg
 
 custom = sg.Script(
-    name="log_dwell",
+    name="log_exit",
     trigger="onPageExit",
+    context={"endpoint": "/diagnostics"},
     code="""
-        const ms = Date.now() - (context.entered ?? Date.now());
-        api.post('/dwell', { page: context.page_name, ms });
+        api.post(context.endpoint, { left_at: utils.now() });
     """,
 )
 ```
@@ -138,11 +139,11 @@ match_emails  = sg.Script.validate_fields_match(
     "email_1", "email_2", message="Emails don't match.",
 )
 custom = sg.Script(
-    name="log_dwell",
+    name="log_exit",
     trigger="onPageExit",
+    context={"endpoint": "/diagnostics"},
     code="""
-        const ms = Date.now() - (context.entered ?? Date.now());
-        api.post('/dwell', { page: context.page_name, ms });
+        api.post(context.endpoint, { left_at: utils.now() });
     """,
 )
 

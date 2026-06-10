@@ -48,7 +48,7 @@ default weight column set via `with_weight(...)`; raises `ValueError` if no
 weight is configured.
 
 ```python
-data.analysis.mean("autonomy")        # 2.936
+data.analysis.mean("autonomy")        # 3.06
 ```
 
 ### `median`
@@ -77,11 +77,11 @@ group's value label. With `weighted=True`, `n` is the summed weight per group.
 ```python
 print(data.analysis.grouped_mean("autonomy", by="remote_freq", labels=True))
 #    group      mean     n          label
-# 0    1.0  3.695652  23.0          Never
-# 1    2.0  2.166667  12.0   Occasionally
-# 2    3.0  2.900000  30.0         Hybrid
-# 3    4.0  2.677419  31.0  Mostly remote
-# 4    5.0  3.000000  13.0   Fully remote
+# 0      1  3.222222  45.0          Never
+# 1      2  2.923077  39.0   Occasionally
+# 2      3  2.897959  49.0         Hybrid
+# 3      4  3.000000  31.0  Mostly remote
+# 4      5  3.277778  36.0   Fully remote
 ```
 
 For a formatted, significance-tested version of this comparison, prefer the
@@ -91,8 +91,8 @@ For a formatted, significance-tested version of this comparison, prefer the
 
 ## Inferential tests
 
-These methods require **`scipy`** (installed with the base package's stats
-extra; they raise `ImportError` if it is missing). Each returns a plain `dict`.
+These methods require **`scipy`**, which ships with the base install (they raise
+`ImportError` if it is somehow missing). Each returns a plain `dict`.
 
 ### `kruskal`
 
@@ -107,7 +107,7 @@ non-empty groups.
 
 ```python
 data.analysis.kruskal("autonomy", "remote_freq")
-# {'statistic': 10.5254..., 'p_value': 0.0324..., 'groups': 5.0}
+# {'statistic': 2.1330..., 'p_value': 0.7112..., 'groups': 5.0}
 ```
 
 ### `mannwhitney`
@@ -124,7 +124,7 @@ groups are present.
 ```python
 two_levels = data.with_frame(data.frame[data.frame["remote_freq"].isin([1, 5])])
 two_levels.analysis.mannwhitney("autonomy", "remote_freq")
-# {'statistic': ..., 'p_value': ..., 'group_a': 1.0, 'group_b': 5.0}
+# {'statistic': 794.0, 'p_value': 0.8796..., 'group_a': 1, 'group_b': 5}
 ```
 
 > The [[Reporting Tables|Reporting-Tables]] `GroupMeanTable` picks between

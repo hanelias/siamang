@@ -79,9 +79,10 @@ for the incoming-webhook details.)
 
 ### Trigger
 
-`POST /projects/{id}/deployments` (role `developer`+) with `commit_sha`,
-`environment`, and an optional `slug`. The API creates a `deployments` row
-(`status=queued`) and enqueues the `deploy` job. Deploy splits cleanly between
+`POST /projects/{id}/deployments` (role `developer`+) with an `environment`, an
+optional `slug`, and a `branch` (default `main`). The API resolves the branch
+HEAD and pins that commit SHA itself, creates a `deployments` row
+(`status=queued`), and enqueues the `deploy` job. Deploy splits cleanly between
 the sandbox (which only sees the code and absolute Ingest URLs) and the trusted
 worker (which holds the database connection) — see
 [[Cloud Sandbox and Security|Cloud-Sandbox-and-Security]].
