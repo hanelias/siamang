@@ -203,4 +203,4 @@ The `siamang.config` symbols are not re-exported at the top level.
 ---
 
 See also: [[Home]] · [[Quickstart]] · [[Tutorial Full Pipeline|Tutorial-Full-Pipeline]] ·
-[[Cookbook]] · [[Contributing]]
+[[Cookbook]]

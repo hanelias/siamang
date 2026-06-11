@@ -44,43 +44,24 @@
 - [[Tutorial Full Pipeline|Tutorial-Full-Pipeline]]
 - [[API Reference Index|API-Reference-Index]]
 - [[Cookbook]]
-- [[Contributing]]
 
 ---
 
-### ☁️ Cloud Platform
+### ☁️ siamang Cloud
 
-**Overview**
-- [[Cloud Overview|Cloud-Overview]]
-- [[Cloud Architecture|Cloud-Architecture]]
-- [[Cloud Quick Start|Cloud-Quick-Start]]
-- [[Cloud Web App|Cloud-Web-App]]
-- [[Cloud Domain Model|Cloud-Domain-Model]]
+**Get started**
+- [[Overview|Cloud-Overview]]
+- [[Quick Start|Cloud-Quick-Start]]
 
-**API & auth**
-- [[Cloud REST API|Cloud-REST-API]]
-- [[Cloud Authentication|Cloud-Authentication]]
+**Use the platform**
+- [[Using the Web App|Cloud-Web-App]]
+- [[Analysis & Reports|Cloud-Analysis-and-Reporting]]
+- [[Schedules & Webhooks|Cloud-Scheduling-and-Webhooks]]
+- [[Connectors|Cloud-Connectors]]
 
-**Pipeline**
-- [[Cloud Survey Lifecycle|Cloud-Survey-Lifecycle]]
-- [[Cloud Analysis and Reporting|Cloud-Analysis-and-Reporting]]
-- [[Cloud Scheduling and Webhooks|Cloud-Scheduling-and-Webhooks]]
-- [[Cloud Connectors|Cloud-Connectors]]
-
-**Extending**
-- [[Cloud Engine Plugin|Cloud-Engine-Plugin]]
-- [[Cloud Analysis SDK|Cloud-Analysis-SDK]]
+**Author & configure**
 - [[Project Config (siamang.yaml)|Cloud-siamang-yaml]]
+- [[Analysis SDK|Cloud-Analysis-SDK]]
 
-**Operations**
-- [[Cloud Sandbox and Security|Cloud-Sandbox-and-Security]]
-- [[Cloud Data Model and Migrations|Cloud-Data-Model-and-Migrations]]
-- [[Cloud Configuration|Cloud-Configuration]]
-- [[Cloud Deployment|Cloud-Deployment]]
-- [[Cloud CI CD and Testing|Cloud-CI-CD-and-Testing]]
-
-**Project & business**
-- [[Cloud Subscription Tiers|Cloud-Subscription-Tiers]]
-- [[Cloud Self-Hosted Trials|Cloud-Self-Hosted-Trials]]
-- [[Cloud Contributing|Cloud-Contributing]]
-- [[Cloud Roadmap|Cloud-Roadmap]]
+**Plans**
+- [[Plans & Billing|Cloud-Subscription-Tiers]]

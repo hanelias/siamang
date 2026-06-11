@@ -6,14 +6,14 @@ simulate, deploy, collect, and analyze, all from a single pipeline. No GUI build
 no drag-and-drop, no lock-in: a survey is just a Python module you can version,
 test, and reuse.
 
-**siamang Cloud** is the managed (and self-hostable) platform built on top of the
-engine: Git-backed survey projects, sandboxed validation and deployment, hosted
-frontends, per-project multi-tenant data, scheduled analysis runs, and reports.
+**siamang Cloud** is the managed platform built on the siamang engine: keep your
+surveys as code in hosted projects, deploy them with one click, collect responses,
+run analysis, and share reports — all from your browser.
 
 > This wiki has **two parts**. Use the sidebar to navigate.
 >
 > - 📚 **Library** — the `siamang` Python package. Start at **[[Quickstart]]**.
-> - ☁️ **Cloud Platform** — the `siamang_cloud` platform. Start at **[[Cloud Overview|Cloud-Overview]]**.
+> - ☁️ **siamang Cloud** — the hosted platform. Start at **[[Cloud Overview|Cloud-Overview]]**.
 
 ---
 
@@ -66,7 +66,7 @@ siamang deploy   my_survey.py --backend supabase --frontend vercel
 | **Frontend** | SurveyJS and React 18 runtimes, dark mode, auto-save, access codes, 6 theme presets |
 | **Deploy** | Local SQLite, Supabase, Google Sheets backends; Local, Vercel, Netlify frontends |
 | **Data I/O** | CSV, Excel, SPSS, Stata, R — SPSS/Stata round-trip labels and missing values; CSV/Excel carry data only (labels via the JSON dictionary) |
-| **Cloud** | Git-backed projects, sandboxed deploy, public ingest API, dashboards, scheduled analysis, reports, multi-tenant RLS, subscription tiers |
+| **Cloud** | Hosted survey projects, one-click deploy, response collection, live dashboards, scheduled analysis, shareable reports, team roles and plans |
 
 ---
 
@@ -85,16 +85,16 @@ siamang deploy   my_survey.py --backend supabase --frontend vercel
 
 See the full list in the sidebar, or the manual **[[API Reference Index\|API-Reference-Index]]**.
 
-## ☁️ Cloud Platform — start here
+## ☁️ siamang Cloud — start here
 
 | Page | What it covers |
 | :--- | :--- |
-| [[Cloud Overview\|Cloud-Overview]] | What the platform is and how it relates to the engine |
-| [[Cloud Architecture\|Cloud-Architecture]] | Monorepo layout, layers, data flow |
-| [[Cloud Quick Start\|Cloud-Quick-Start]] | Run the full stack locally with Docker |
-| [[Cloud REST API\|Cloud-REST-API]] | Every endpoint, grouped by router |
-| [[Cloud Survey Lifecycle\|Cloud-Survey-Lifecycle]] | Validate → deploy → ingest |
-| [[Cloud Deployment\|Cloud-Deployment]] · [[Cloud Configuration\|Cloud-Configuration]] | Deploy scenarios and environment variables |
+| [[Cloud Overview\|Cloud-Overview]] | What the platform does and who it's for |
+| [[Cloud Quick Start\|Cloud-Quick-Start]] | Create a project and deploy your first survey |
+| [[Using the Web App\|Cloud-Web-App]] | The web interface, screen by screen |
+| [[Analysis & Reports\|Cloud-Analysis-and-Reporting]] | Run analysis, view reports and dashboards |
+| [[Project Config (siamang.yaml)\|Cloud-siamang-yaml]] · [[Analysis SDK\|Cloud-Analysis-SDK]] | Configure projects and write analysis scripts |
+| [[Plans & Billing\|Cloud-Subscription-Tiers]] | Plans, limits, and team roles |
 
 ---
 
