@@ -1,92 +1,80 @@
-# Cloud Overview
+# siamang Cloud — Overview
 
-**siamang Cloud** is a managed (and self-hostable) *research-as-code* platform
-built on top of the open-source [[Core Concepts|Core-Concepts]] engine. A survey
-is a Git-backed project: you version the questionnaire and analysis as code,
-deploy it as a live survey, collect responses into managed storage, and run
-scheduled analysis with reproducible reports — all in one place.
+**siamang Cloud** is the hosted home for your surveys. You author a survey as
+code, keep it in a project on the platform, and from your browser you deploy it
+to a public link, collect responses, run analysis, read dashboards and reports,
+and manage your team and plan — all in one place.
 
-## What it is
+## The core idea
 
-Sociological and marketing research is usually fragmented: the questionnaire is
-built in one tool, data lives in another, cleaning and analysis happen in
-Excel/SPSS/R on someone's laptop, and reports end up somewhere else. Six months
-later it is nearly impossible to reconstruct *how* a study was built, what data
-was collected, how it was cleaned, and which tables were produced.
+Your survey is **code in a hosted project**. Each project is backed by Git, so
+the questionnaire, its logic, and your analysis scripts are versioned the way
+software is: every change is a commit you can review, and nothing about a study
+gets lost between tools.
 
-siamang Cloud unifies the whole research lifecycle behind a model best described
-as **"a specialized GitLab + survey deployment + managed data storage"**:
+You bring the survey (written with the `siamang` library); siamang Cloud runs
+everything around it:
 
-- **Repository** — the questionnaire and its logic as code, versioned through
-  Git. Every push is validated automatically.
-- **Deployments** — one-click publish of a survey to a public URL.
-- **Database** — managed PostgreSQL storage for responses, readable by analysts.
-- **Analysis** — data analysis through Python scripts with a full run history and
-  their outputs.
-- **Files & Reports** — survey assets and generated report artifacts (Markdown /
-  HTML), downloadable from object storage.
+- **Publishes** your survey to a live, public URL that respondents open in a
+  browser — no account needed for them.
+- **Collects** responses into managed storage you can browse and export.
+- **Validates** your code automatically on every commit and shows a pass/fail
+  status, so a broken survey never goes live by accident.
+- **Runs analysis** scripts on the collected data and keeps a history of every
+  run and its output.
+- **Shows dashboards** (frequencies, crosstabs, a respondent summary) for quick
+  looks, and **generates reports** (Markdown / HTML) for sharing.
+- **Manages your team** (invite people, assign roles) and your **plan**.
 
-Under the hood, all the domain functionality (questionnaire model, validation,
-compilation to a web bundle, reporting, SPSS/Excel/Stata I/O) already lives in
-the `siamang` engine. **siamang Cloud is the platform shell around the engine**:
-multi-user, multi-tenant, with Git hosting, deployment orchestration, and data
-storage. The engine is consumed through its public extension points so it can be
-upgraded as a normal pip dependency.
+You never wire up servers, databases, or hosting. You write the survey and the
+analysis; the platform does the rest.
 
-## How it relates to the Library
+## How it relates to the library
 
-The `siamang` Python package (the **Library** side of this wiki) is the engine:
-you can use it entirely on your own laptop — define a survey, validate, simulate,
-deploy to SQLite/Supabase, and analyze. siamang Cloud takes that same engine and
-adds the surrounding platform:
+The wiki has two parts. The **library** (`siamang`) is the Python package you
+use to write a survey — variables, question types, pages, logic, reports. siamang
+**Cloud** is the platform that hosts and runs what you wrote.
 
-| Concern | Library (`siamang`) | Cloud (`siamang_cloud`) |
+You can do everything on your own laptop with the library alone. The Cloud adds
+the parts that are awkward to run yourself: a public survey host, managed
+response storage, automatic validation on every push, hosted analysis runs with
+history, and team collaboration.
+
+| What you want to do | In the library | In the Cloud |
 | :--- | :--- | :--- |
-| Survey definition | Python module | The same Python module, in a Git repo |
-| Validation | `siamang validate` locally | Automatic on every `git push` (sandboxed) |
-| Deployment | `siamang deploy` to your own backend | One-click managed deploy + hosted survey |
-| Data storage | Local SQLite / your Supabase | Managed, multi-tenant PostgreSQL |
-| Analysis | Run scripts locally | Hosted runs, schedules, run history, reports |
-| Collaboration | Git / files you manage | Organizations, roles, audit, team access |
+| Write the survey | A Python module | The same module, in your project's repo |
+| Check it is valid | `siamang validate` on your machine | Automatic on every commit, with a status badge |
+| Put it online | Deploy to your own backend | One click → a hosted survey URL |
+| Store responses | Local file / your own database | Managed storage you browse and export |
+| Analyze data | Run scripts locally | Hosted runs, schedules, run history, reports |
+| Work as a team | Files you pass around | Organizations, roles, shared projects |
 
-If you are new, read [[Core Concepts|Core-Concepts]] first to understand the
-research-as-code model, then come back here.
+New to writing surveys as code? Start with [[Core Concepts|Core-Concepts]] and
+the [[Quickstart]] on the library side, then come back here.
 
-## Who it is for
+## What you can do
 
-- **Research / marketing agencies** running repeated studies that need
-  versioning, reproducibility, and a single source of truth.
-- **Project managers** who create projects, deploy surveys, and manage the team.
-- **Methodologists / survey programmers** who author the questionnaire, variables,
-  and project config as code.
-- **Analysts** who read collected data, write cleaning scripts, and build tables,
-  charts, and reports.
-- **Respondents** — external users who take a survey via its public URL with no
-  account required.
+- Create an **organization** (your workspace) and **projects** inside it.
+- Start from a ready-made **example study** or an empty project — either way a
+  repo and a database are set up for you.
+- Edit your questionnaire in an **in-browser code editor**, or clone the repo and
+  push from your own machine.
+- **Deploy** a survey to an environment (e.g. a small pilot, then the main run)
+  and share its public URL.
+- Watch responses arrive in the **Database** and on the **Dashboard**.
+- **Export** your data to CSV, Excel, SPSS, Parquet, or SQLite.
+- Commit **analysis scripts**, run them, and open the generated **reports**.
+- Invite **teammates**, set their roles, and pick the **plan** that fits.
 
-## The value
+## Next steps
 
-- **Reproducible** — the questionnaire, the deployed version, the collected data,
-  the analysis scripts, and every run output all live together and are versioned.
-- **Managed** — no servers to wire up for collection: deploy, get a URL, and
-  responses flow into isolated per-project storage.
-- **Multi-tenant and secure** — each tenant is isolated by a per-project Postgres
-  schema plus Row-Level Security; user code only ever runs in an ephemeral,
-  network-isolated sandbox.
-- **Open core** — the engine is open-source; the Cloud platform is what adds
-  managed infrastructure, team collaboration, and premium features. It can also
-  be self-hosted from a single `docker-compose.yml`.
-
-## Where to go next
-
-- [[Cloud Architecture|Cloud-Architecture]] — the monorepo, the layers, and the
-  end-to-end data flow.
-- [[Cloud Quick Start|Cloud-Quick-Start]] — run the whole stack locally with
-  Docker.
-- [[Cloud Domain Model|Cloud-Domain-Model]] — organizations, projects, runs, and
-  how they relate.
-- [[Cloud REST API|Cloud-REST-API]] — every endpoint, grouped by router.
+- [[Cloud Quick Start|Cloud-Quick-Start]] — sign in and get your first survey
+  live, end to end.
+- [[Using the Web App|Cloud-Web-App]] — a tour of every screen.
+- [[Analysis & Reports|Cloud-Analysis-and-Reporting]] — dashboards, analysis
+  runs, and reports.
+- [[Plans & Billing|Cloud-Subscription-Tiers]] — what each plan includes.
 
 ## See also
 
-[[Core Concepts|Core-Concepts]] · [[Cloud Architecture|Cloud-Architecture]] · [[Cloud Quick Start|Cloud-Quick-Start]] · [[Home]]
+[[Cloud Quick Start|Cloud-Quick-Start]] · [[Using the Web App|Cloud-Web-App]] · [[Core Concepts|Core-Concepts]] · [[Quickstart]]

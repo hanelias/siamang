@@ -1,113 +1,126 @@
 # Cloud Quick Start
 
-Run the full siamang Cloud stack locally with Docker: Postgres, Redis, Gitea,
-MinIO, the API, a worker, the nginx survey host, and the Next.js web app. There
-is also a zero-services "mock mode" if you only want to click through the web UI.
+This walkthrough takes you from signing in to a **live survey collecting
+responses** — and your first analysis report — entirely in the web app. The
+fastest path uses the built-in **example study**, so you can see the whole loop
+before writing a line of your own.
 
-## Prerequisites
+If you are new to writing surveys as code, skim [[Core Concepts|Core-Concepts]]
+first; it explains the model you will see in the project's files.
 
-- Docker with Compose v2 (`docker compose`).
-- The `siamang_cloud` repository checked out locally.
-- For mock mode only: Node.js (to run the web dev server).
+## 1. Sign in
 
-## Run the full stack
+Open siamang Cloud and sign in. After you sign in you land in your **workspace**.
+The top bar shows your organization, a theme toggle, and your account menu.
 
-```bash
-cp .env.example .env
-docker compose up --build
-```
+## 2. Create an organization
 
-The first build provisions Postgres, runs migrations, brings up Gitea and MinIO,
-and starts the API, worker, nginx, and web containers.
+An **organization** is your workspace; it owns your projects, your team, and your
+plan. If you do not have one yet, click **Create organization** and give it a
+name. A personal organization is fine for working solo — you can turn it into a
+team later.
 
-### Service URLs
+> One organization is enough to start. See [[Plans & Billing|Cloud-Subscription-Tiers]]
+> for what each plan includes and how team roles work.
 
-All ports are bound to `127.0.0.1` by the local compose file:
+## 3. Create a project
 
-| Service | URL | Notes |
-| :--- | :--- | :--- |
-| API | http://localhost:8000 | FastAPI platform API |
-| Web | http://localhost:3001 | Next.js product UI |
-| Gitea | http://localhost:3000 | Git hosting (repos, push webhooks) |
-| MinIO console | http://localhost:9001 | Object-storage console (S3 API on :9000) |
-| Surveys | http://localhost:8080 | nginx static host for deployed surveys |
+Inside the organization, open **Projects** and click **New project**. You get two
+choices:
 
-### Health check
+- **Create example study** — seeds a complete **"Work & Wellbeing"** project: a
+  full questionnaire (consent, screening, quotas, every question type, skip
+  logic, a custom thank-you page), three analysis scripts, and about 300 sample
+  responses so the data screens are alive immediately. **Pick this one** for your
+  first run.
+- **New project** — an empty project with a small starter survey, if you would
+  rather start from scratch.
 
-```bash
-curl http://localhost:8000/health
-```
+Either way the platform sets up a **Git-backed repository** and a **database** for
+you automatically. Open the project to enter its workspace, where the left
+sidebar lists Dashboard, Repository, Database, Deployments, Analysis, and more.
 
-```json
-{"status": "ok"}
-```
+## 4. Review the survey in the repository
 
-`GET /health` is a liveness probe (200 when the API process is up). For a
-readiness probe that also checks Postgres and Redis, use `GET /health/ready`,
-which returns `200` with `{"status": "ok", "checks": {...}}` only when both
-dependencies are reachable, and `503` (`"degraded"`) otherwise.
+Open **Repository**. The file tree shows the project's files; open
+`survey/questionnaire.py` to read the survey as code in the in-browser editor.
+Other files worth a look:
 
-## Configure secrets before going client-facing
+- `siamang.yaml` — the project's configuration: where the survey lives, which
+  deployment environments exist, and which analysis scripts to run (see
+  [[Project Config (siamang.yaml)|Cloud-siamang-yaml]]).
+- `scripts/` — the analysis scripts (cleaning, weighting, tables).
 
-The API **refuses to start** (its `assert_secure_config` check) if the dev `auth`
-provider is selected and the security-critical values are left at their defaults.
-Every value marked `CHANGE ME` in `.env.example` must be replaced for a
-client-facing deploy. The most important ones:
+Try a small edit, then click **Save & commit** (or press Ctrl/Cmd+S), write a
+short message, and commit. **Validation runs automatically on every commit** and
+shows a pass/fail status: a green badge on the file when it is valid, or the
+error count if something is wrong. A commit that fails validation tells you
+exactly what to fix before anything goes live.
 
-| Variable | Why | How to generate |
-| :--- | :--- | :--- |
-| `JWT_SECRET` | Signs platform JWTs (must be >= 32 chars and not the dev default) | `openssl rand -hex 32` |
-| `FERNET_KEY` | Encrypts stored Git tokens and project secrets | `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"` |
-| `GIT_WEBHOOK_SECRET` | Validates Gitea push webhooks (must be non-default) | `openssl rand -hex 32` |
-| `SANDBOX_DB_SECRET` | Derives per-project Postgres role passwords for analysis | `openssl rand -hex 32` |
-| `GITEA_ADMIN_TOKEN` | Lets the API drive Gitea | minted automatically by `scripts/dev_up.sh` |
+## 5. Deploy and get a public survey URL
 
-Other notable settings include `POSTGRES_PASSWORD`, `MINIO_ACCESS_KEY` /
-`MINIO_SECRET_KEY`, and the public URLs (`INGEST_BASE_URL`, `SURVEYS_BASE_URL`,
-`WEB_BASE_URL`). See [[Cloud Configuration|Cloud-Configuration]] for the complete
-list.
+Open **Deployments** and click **New deployment**. Choose an environment — the
+example project comes with **pilot** (a small cap) and **main** — and deploy. The
+platform compiles your latest commit and publishes the survey to an **isolated,
+hosted environment**.
 
-## One-shot dev bring-up
+When the build finishes, the card shows a **public survey URL**. That link is
+what you share with respondents — they open it in any browser and no account is
+required.
 
-For local development or GitHub Codespaces there is a re-runnable bootstrap
-script that brings up infra, runs migrations, mints a Gitea admin token, creates
-the MinIO bucket, builds the sandbox image, and starts the API, worker, and
-nginx:
+> Want to click through the survey first without collecting real data? Use
+> **Preview** on the Deployments screen. It builds a staging version you can fill
+> in yourself; a preview does not accept real responses.
 
-```bash
-bash scripts/dev_up.sh
-```
+## 6. Open and fill the survey
 
-It fills in any still-default secrets in `.env`, sets `NEXT_PUBLIC_USE_MOCK=false`
-so the web UI talks to the live API, and waits for `GET /health` to go green
-before finishing (printing the container status and next-step hints).
+Click the survey URL. Take the survey as a respondent would: answer the screening
+questions, work through the pages, and submit. Submit it a few times to generate
+some real responses alongside the sample data.
 
-## Web mock mode (no services)
+## 7. Watch responses appear
 
-The entire product is clickable on fixtures — no Postgres, Gitea, Redis, Docker,
-or MinIO required. This is the fastest way to explore the UI:
+- **Database** — open it and select the `responses` table. Your submissions show
+  up as rows (next to the ~300 seeded sample rows). You can filter, sort, page
+  through the data, and **Export** it to CSV, Excel, SPSS (`.sav`), Parquet, or
+  SQLite.
+- **Dashboard** — the **Data insights** section charts your data live: response
+  and respondent counts, responses per day, a **frequency** chart for any
+  variable, and a two-way **crosstab**. These update as responses arrive.
 
-```bash
-cd web
-npm install
-NEXT_PUBLIC_USE_MOCK=true npm run dev    # http://localhost:3000 (next dev default)
-```
+On the live Deployment card you will also see a **monitor**: how many responses
+have come in (and against the cap), quota progress, and the survey's codebook.
 
-Every screen works against `web/lib/mock.ts` fixtures (Repository, Database,
-Deployments, Analysis, Dashboard, Files, Team, Settings). All screens go through
-the `web/lib/platform.ts` adapter, which switches to the live API when
-`NEXT_PUBLIC_USE_MOCK=false`. Point the live build at the API with
-`NEXT_PUBLIC_API_BASE_URL` (and `NEXT_PUBLIC_AUTH_MODE=dev` for the dev JWT auth
-flow). Note that `NEXT_PUBLIC_*` values are inlined at build time.
+## 8. Run an analysis and open the report
 
-## First steps after it is up
+Open **Analysis**. The **Scripts** list shows the analysis steps declared in
+`siamang.yaml`. You can:
 
-1. Register a user and obtain a token — see [[Cloud Authentication|Cloud-Authentication]].
-2. Create an organization and a project (which provisions a Git repo + a Postgres
-   schema + a skeleton commit + a push webhook).
-3. Edit the questionnaire, push, and watch validation; then deploy and collect
-   responses. See [[Cloud Survey Lifecycle|Cloud-Survey-Lifecycle]].
+- Click **Run** on a single script, or
+- Click **Run all** to run every analysis step in order (clean → weight →
+  tabulate) and combine the results into one report.
+
+Each run appears in **Run history** and finishes **completed** or **failed**.
+Click a run to open its detail panel with **Logs** and **Outputs** tabs. The
+**Outputs** tab links to anything the run produced — a **report**, new database
+tables, and downloadable files.
+
+Open the generated report (Markdown, with an **HTML** download available) to see
+your tables and charts. Reports also appear under **Files** and can be opened
+from the Repository.
+
+## You did it
+
+You signed in, created a project, deployed a live survey, collected responses,
+and produced a report — without managing any servers. From here:
+
+- [[Using the Web App|Cloud-Web-App]] — every screen, explained.
+- [[Analysis & Reports|Cloud-Analysis-and-Reporting]] — dashboards, runs, and
+  reports in depth.
+- [[Analysis SDK|Cloud-Analysis-SDK]] — write your own analysis scripts.
+- [[Project Config (siamang.yaml)|Cloud-siamang-yaml]] — configure environments
+  and tasks.
 
 ## See also
 
-[[Cloud Overview|Cloud-Overview]] · [[Cloud Architecture|Cloud-Architecture]] · [[Cloud Configuration|Cloud-Configuration]] · [[Cloud Authentication|Cloud-Authentication]] · [[Cloud REST API|Cloud-REST-API]]
+[[siamang Cloud — Overview|Cloud-Overview]] · [[Using the Web App|Cloud-Web-App]] · [[Analysis & Reports|Cloud-Analysis-and-Reporting]] · [[Quickstart]]
