@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=69", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,8 +9,8 @@ description = "Research-as-code framework for sociological surveys."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{name = "Siamang Project Contributors"}]
-license = "MIT"
-license-files = ["LICENSE"]
+license = "PolyForm-Noncommercial-1.0.0 OR LicenseRef-Commercial"
+license-files = ["LICENSE", "LICENSE-COMMERCIAL.md"]
 keywords = ["survey", "research", "sociology", "questionnaire", "polling"]
 classifiers = [
     "Development Status :: 4 - Beta",
