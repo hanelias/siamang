@@ -278,5 +278,16 @@ pip install siamang[dev]
 
 ## License
 
-Siamang is released under the [MIT License](LICENSE). Free for any use —
-academic, commercial, personal.
+Siamang is **dual-licensed**:
+
+- **Noncommercial use is free** under the
+  [PolyForm Noncommercial License 1.0.0](LICENSE) — personal projects,
+  research, education, and use by noncommercial organizations such as
+  charities, universities, public research bodies, and government
+  institutions.
+- **Commercial use requires a separate commercial license.** See
+  [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md) — to obtain one, contact
+  [@hanelias](https://github.com/hanelias).
+
+Versions up to and including 0.5.0 were published under the MIT License
+and remain available under it.

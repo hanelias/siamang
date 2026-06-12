@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **License**: switched from MIT to dual licensing. Noncommercial use is
+  free under the **PolyForm Noncommercial License 1.0.0** (`LICENSE`);
+  commercial use now requires a separate commercial license
+  (`LICENSE-COMMERCIAL.md`). Versions up to and including 0.5.0 remain
+  available under the MIT License.
+- Build: `setuptools>=77` is now required (PEP 639 license metadata).
+
 ## [0.5.0] — 2026-05-28
 
 ### Added

@@ -1,4 +1,4 @@
-include README.md CHANGELOG.md LICENSE MANIFEST.in
+include README.md CHANGELOG.md LICENSE LICENSE-COMMERCIAL.md MANIFEST.in
 include pyproject.toml
 
 recursive-include siamang *.tpl *.jsx *.js py.typed
