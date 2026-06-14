@@ -8,6 +8,9 @@ before writing a line of your own.
 If you are new to writing surveys as code, skim [[Core Concepts|Core-Concepts]]
 first; it explains the model you will see in the project's files.
 
+**What you'll need:** a siamang Cloud account and an organization (a personal one
+is fine — see [[Organizations & Team|Cloud-Organizations-and-Team]]).
+
 ## 1. Sign in
 
 Open siamang Cloud and sign in. After you sign in you land in your **workspace**.
@@ -114,12 +117,21 @@ from the Repository.
 You signed in, created a project, deployed a live survey, collected responses,
 and produced a report — without managing any servers. From here:
 
+- [[Your First Project|Cloud-Your-First-Project]] — templates and project structure.
 - [[Using the Web App|Cloud-Web-App]] — every screen, explained.
+- [[Deploying a Survey|Cloud-Deploying-a-Survey]] — environments, preview, sharing,
+  and monitoring fieldwork.
+- [[Viewing & Exporting Data|Cloud-Viewing-and-Exporting-Data]] — browse responses
+  and export your data.
+- [[Organizations & Team|Cloud-Organizations-and-Team]] — invite teammates and set
+  roles.
 - [[Analysis & Reports|Cloud-Analysis-and-Reporting]] — dashboards, runs, and
   reports in depth.
 - [[Analysis SDK|Cloud-Analysis-SDK]] — write your own analysis scripts.
 - [[Project Config (siamang.yaml)|Cloud-siamang-yaml]] — configure environments
   and tasks.
+- [[FAQ & Troubleshooting|Cloud-FAQ-and-Troubleshooting]] — common questions and
+  fixes.
 
 ## See also
 

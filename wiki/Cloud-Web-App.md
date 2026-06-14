@@ -177,6 +177,17 @@ Settings that apply to the whole organization (open the **Settings** button or
 - **Activity** — an audit feed of actions across the organization (deploys, runs,
   invites, deletions) with a time-range filter.
 
+## Step-by-step guides
+
+Task-focused how-tos for the screens above:
+[[Account & Security|Cloud-Account-and-Security]] ·
+[[Organizations & Team|Cloud-Organizations-and-Team]] ·
+[[Your First Project|Cloud-Your-First-Project]] ·
+[[Repository & Editing|Cloud-Repository-and-Editing]] ·
+[[Deploying a Survey|Cloud-Deploying-a-Survey]] ·
+[[Viewing & Exporting Data|Cloud-Viewing-and-Exporting-Data]] ·
+[[FAQ & Troubleshooting|Cloud-FAQ-and-Troubleshooting]]
+
 ## See also
 
 [[Cloud Quick Start|Cloud-Quick-Start]] · [[Analysis & Reports|Cloud-Analysis-and-Reporting]] · [[Plans & Billing|Cloud-Subscription-Tiers]] · [[siamang Cloud — Overview|Cloud-Overview]]

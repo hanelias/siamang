@@ -91,10 +91,15 @@ See the full list in the sidebar, or the manual **[[API Reference Index\|API-Ref
 | :--- | :--- |
 | [[Cloud Overview\|Cloud-Overview]] | What the platform does and who it's for |
 | [[Cloud Quick Start\|Cloud-Quick-Start]] | Create a project and deploy your first survey |
+| [[Your First Project\|Cloud-Your-First-Project]] | Start from the example or an empty project |
+| [[Organizations & Team\|Cloud-Organizations-and-Team]] | Workspaces, inviting people, and roles |
 | [[Using the Web App\|Cloud-Web-App]] | The web interface, screen by screen |
+| [[Deploying a Survey\|Cloud-Deploying-a-Survey]] | Publish a survey and share its public link |
+| [[Viewing & Exporting Data\|Cloud-Viewing-and-Exporting-Data]] | Browse responses and export your data |
 | [[Analysis & Reports\|Cloud-Analysis-and-Reporting]] | Run analysis, view reports and dashboards |
 | [[Project Config (siamang.yaml)\|Cloud-siamang-yaml]] · [[Analysis SDK\|Cloud-Analysis-SDK]] | Configure projects and write analysis scripts |
 | [[Plans & Billing\|Cloud-Subscription-Tiers]] | Plans, limits, and team roles |
+| [[FAQ & Troubleshooting\|Cloud-FAQ-and-Troubleshooting]] | Common questions and fixes |
 
 ---
 
